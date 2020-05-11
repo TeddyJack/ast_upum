@@ -145,18 +145,20 @@ initial
   send_to_rx(8'h16); send_to_rx(8'h1D);  // black level lsb, msb
   send_to_rx(8'hCC);  // crc
   
-  #(500*CLK_T)
-  
   send_to_rx(8'hDD);  // prefix
   send_to_rx(8'h09);  // address of dest
   send_to_rx(8'h02);  // len
   send_to_rx(8'hA0); send_to_rx(8'h50);
   send_to_rx(8'hCC);  // crc
-  /*
-  #5000
   
   send_to_rx(8'hDD);  // prefix
-  send_to_rx(8'h16);  // address of dest
+  send_to_rx(8'h0A);  // address of dest
+  send_to_rx(8'h02);  // len
+  send_to_rx(8'hA0); send_to_rx(8'h50);
+  send_to_rx(8'hCC);  // crc
+  /*
+  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'h10);  // address of dest
   send_to_rx(8'd64);  // len
   for(b=1; b<=64; b=b+1)
     begin

@@ -42,7 +42,7 @@ wire [7:0] len;
 reg [1*N_SLAVES-1:0] select_unitary;
 assign have_msg_bus = ~{N_SLAVES{s_empty}} & select_unitary;
 wire n_cs;
-assign n_cs_bus = ~({N_SLAVES{n_cs}} & select_unitary);
+assign n_cs_bus = {N_SLAVES{n_cs}} | ~select_unitary;
 
 genvar i, j;
 generate
