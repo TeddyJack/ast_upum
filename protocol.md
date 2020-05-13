@@ -13,21 +13,41 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
 
 # Sources and destinations
 
-  | Address | Type          | Name   | ID         | IF   | w/r  | Descr          |
-  |---------|---------------|--------|------------|------|------|----------------|
-  | 0x00    | Potentiometer | AD5293 | Power: D17 | SPI  | w    | vdd            |
-  | 0x01    | Potentiometer | AD5293 | Power: D1  |      |      | dvdd           |
-  | 0x02    | Potentiometer | AD5293 | Power: D2  |      |      | avdd           |
-  | 0x03    | Potentiometer | AD5293 | Power: D18 |      |      | limit input    |
-  | 0x04    | Potentiometer | AD5293 | D79        |      |      | cmp a          |
-  | 0x05    | Potentiometer | AD5293 | D80        |      |      | cmp b          |
-  | 0x06    | Potentiometer | AD5293 | D81        |      |      | oa 0           |
-  | 0x07    | Potentiometer | AD5293 | D82        |      |      | oa 1           |
-  | 0x08    | ADC           | AD7328 | D1         | SPI  | w/r  | pwr            |
-  | 0x09    | ADC           | AD7328 | D29        |      |      | gpio o 0-127   |
-  | 0x0A    | ADC           | AD7328 | D30        |      |      | gpio o 128-159 |
-  | 0x0B    | ADC           | AD7328 | D39        |      |      | gpio io 0-49   |
-  | 0x0C    |               |        |            |      |      |                |
-  |         |               |        |            |      |      |                |
-  |         |               |        |            |      |      |                |
-  |         |               |        |            |      |      |                |
+  | Address | Type          | D                | IF   | w/r  | Descr                  |
+  |---------|---------------|------------------|------|------|------------------------|
+  | 0x00    | Pot (5293)    | Power: 17        | SPI  | w    | vdd                    |
+  | 0x01    | Pot (5293)    | Power: 1         | SPI  | w    | dvdd                   |
+  | 0x02    | Pot (5293)    | Power: 2         | SPI  | w    | avdd                   |
+  | 0x03    | Pot (5293)    | Power: 18        | SPI  | w    | limit_input            |
+  | 0x04    | Pot (5293)    | 79               | SPI  | w    | cmp_a                  |
+  | 0x05    | Pot (5293)    | 80               | SPI  | w    | cmp_b                  |
+  | 0x06    | Pot (5293)    | 81               | SPI  | w    | oa_0                   |
+  | 0x07    | Pot (5293)    | 82               | SPI  | w    | oa_1                   |
+  | 0x08    | ADC (7328)    | 1                | SPI  | w/r  | pwr                    |
+  | 0x09    | ADC (7328)    | 29               | SPI  | w/r  | gpio_o_0-127           |
+  | 0x0A    | ADC (7328)    | 30               | SPI  | w/r  | gpio_o_128-159         |
+  | 0x0B    | ADC (7328)    | 39               | SPI  | w/r  | gpio_io_0-49           |
+  | 0x0C    | Pot (5293)    | Power: 1,2,17,18 | IO   | w    | rst_power              |
+  | 0x0D    | Pot (5293)    | Power: 17        | IO   | w    | off_vdd                |
+  | 0x0E    | Pot (5293)    | Power: 1         | IO   | w    | off_dvdd               |
+  | 0x0F    | Pot (5293)    | Power: 2         | IO   | w    | off_avdd               |
+  | 0x10    | Pot (5293)    | Power: 18        | IO   | w    | off_limit_input        |
+  | 0x11    | Pot (5293)    | 79-82            | IO   | w    | rst_cmp_oa             |
+  | 0x12    | I2C repeater  | 50-65            | IO   | w    | funct_en_1             |
+  | 0x13    | SBIS UPUM     |                  | IO   | w    | addr                   |
+  | 0x14    | Flash mem     | 45               | IO   | w    | nce_fl1                |
+  | 0x15    | Flash mem     | 46               | IO   | w    | nce_fl2                |
+  | 0x16    | Level transl  | 40-44            | IO   | w    | en_gpio_fl1            |
+  | 0x17    | SBIS UPUM     |                  | IO   | w    | cpu_cfg                |
+  | 0x18    | SBIS UPUM     |                  | IO   | w    | clk_a                  |
+  | 0x19    | SBIS UPUM     |                  | IO   | w    | clk_gen_control        |
+  | 0x1A    | SBIS UPUM     |                  | IO   | w    | csa                    |
+  | 0x1B    | Level transl  | 26-28,37,38,     | IO   | w    | funct_en               |
+  |         |               | 47-49,66-69      |      |      |                        |
+  | 0x1C    | Demux         | 6-15,31-33       | IO   | w    | a_gpio                 |
+  | 0x1D    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_0             |
+  | 0x1E    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v5_1         |
+  | 0x1F    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v0_1         |
+  | 0x20    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
+  | 0x21    | Comparators   | 75               | IO   | r    | sbis_functcontrol_stop |
+  | 0x22    | SBIS_UPUM     |                  | IO   | r    | cmp_o                  |

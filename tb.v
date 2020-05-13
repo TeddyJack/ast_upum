@@ -47,6 +47,7 @@ wire adc_cs_3;
 wire [6:0] addr;
 wire [7:0] my_tx_data;
 wire my_tx_valid;
+reg [3:0] cmp_o;
 
 
 
@@ -86,7 +87,8 @@ ast_upum i1 (
   .tx (tx),
   .addr (addr),
   .my_tx_data (my_tx_data),
-  .my_tx_valid (my_tx_valid)
+  .my_tx_valid (my_tx_valid),
+  .cmp_o (cmp_o)
 );
 
 
@@ -130,6 +132,7 @@ initial
   n_rst = 0;
   rx = 1;
   sclk_common = 1;
+  cmp_o = 4'd6;
   #(CLK_T/4)  // initial offset to 1/4 of period for easier clocking
  
   #(10*CLK_T)
@@ -167,6 +170,12 @@ initial
   send_to_rx(8'h13);  // address of dest
   send_to_rx(8'h01);  // len
   send_to_rx(8'h09);
+  send_to_rx(8'hCC);  // crc
+  
+  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'h22);  // address of dest
+  send_to_rx(8'h01);  // len
+  send_to_rx(8'hFF);
   send_to_rx(8'hCC);  // crc
   /*
   send_to_rx(8'hDD);  // prefix
