@@ -77,19 +77,19 @@ module ast_upum (
   
   output funct_en,  // enables func control, disables load switches
   output [3:0] a_gpio,  // address of multiplexer for gpio
-  //inout gpio_io_32_49,
-  //inout gpio_io_16_31,
-  //inout gpio_io_0_15,
-  //input gpio_o_144_159,
-  //input gpio_o_128_143,
-  //input gpio_o_112_127,
-  //input gpio_o_96_111,
-  //input gpio_o_80_95,
-  //input gpio_o_64_79,
-  //input gpio_o_48_63,
-  //input gpio_o_32_47,
-  //input gpio_o_16_31,
-  //input gpio_o_0_15,
+  inout gpio_io_32_49,
+  inout gpio_io_16_31,
+  inout gpio_io_0_15,
+  input gpio_o_144_159,
+  input gpio_o_128_143,
+  input gpio_o_112_127,
+  input gpio_o_96_111,
+  input gpio_o_80_95,
+  input gpio_o_64_79,
+  input gpio_o_48_63,
+  input gpio_o_32_47,
+  input gpio_o_16_31,
+  input gpio_o_0_15,
   
   // подключают нагрузку к gpio
   output load_pdr_0,
@@ -263,56 +263,59 @@ adcs (
 
 
 
-// addresses 0x0C-0x20
-regs_w_r regs_w_r (
-  .n_rst            (n_rst),
-  .clk              (sys_clk),
-  .master_data      (master_data),
-  .valid_bus        (valid_bus[32:12]),
-  .rdreq_bus        (rdreq_bus[32:12]),
-  .have_msg_bus     (have_msg_bus[32:12]),
-  .slave_data_bus   (slave_data_bus[32*8+7:12*8]),
-  .len_bus          (len_bus[32*8+7:12*8]),
-  
-  .rst_power        (rst_power),
-  .off_vdd          (off_vdd),
-  .off_dvdd         (off_dvdd),
-  .off_avdd         (off_avdd),
-  .off_limit_input  (off_limit_input),
-  .rst_cmp_oa       (rst_cmp_oa),
-  .funct_en_1       (funct_en_1),
-  .addr             (addr),
-  .nce_fl1          (nce_fl1),
-  .nce_fl2          (nce_fl2),
-  .en_gpio_fl1      (en_gpio_fl1),
-  .cpu_cfg          (cpu_cfg),
-  .clk_a            (clk_a),
-  .clk_gen_control  (clk_gen_control),
-  .csa              (csa),
-  .funct_en         (funct_en),
-  .a_gpio           (a_gpio),
-  .load_pdr_0       (load_pdr_0),
-  .load_pdr_5v5_1   (load_pdr_5v5_1),
-  .load_pdr_5v0_1   (load_pdr_5v0_1),
-  .load_pdr_4v5_1   (load_pdr_4v5_1)
-);
-
-
-
-// addresses 0x21-0x22
-regs_r regs_r (
-  .n_rst            (n_rst),
-  .clk              (sys_clk),
-  .master_data      (master_data),
-  .valid_bus        (valid_bus[34:33]),
-  .rdreq_bus        (rdreq_bus[34:33]),
-  .have_msg_bus     (have_msg_bus[34:33]),
-  .slave_data_bus   (slave_data_bus[34*8+7:33*8]),
-  .len_bus          (len_bus[34*8+7:33*8]),
+// addresses 0x0C-0x26
+regs regs (
+  .n_rst (n_rst),
+  .clk (sys_clk),
+  .master_data (master_data),
+  .valid_bus (valid_bus[38:12]),
+  .rdreq_bus (rdreq_bus[38:12]),
+  .have_msg_bus (have_msg_bus[38:12]),
+  .slave_data_bus (slave_data_bus[38*8+7:12*8]),
+  .len_bus (len_bus[38*8+7:12*8]),
   
   .sbis_functcontrol_stop (sbis_functcontrol_stop),
-  .cmp_o                  (cmp_o)
+  .cmp_o (cmp_o),
+  .gpio_o_144_159 (gpio_o_144_159),
+  .gpio_o_128_143 (gpio_o_128_143),
+  .gpio_o_112_127 (gpio_o_112_127),
+  .gpio_o_96_111 (gpio_o_96_111),
+  .gpio_o_80_95 (gpio_o_80_95),
+  .gpio_o_64_79 (gpio_o_64_79),
+  .gpio_o_48_63 (gpio_o_48_63),
+  .gpio_o_32_47 (gpio_o_32_47),
+  .gpio_o_16_31 (gpio_o_16_31),
+  .gpio_o_0_15 (gpio_o_0_15),
+  
+  .rst_power (rst_power),
+  .off_vdd (off_vdd),
+  .off_dvdd (off_dvdd),
+  .off_avdd (off_avdd),
+  .off_limit_input (off_limit_input),
+  .rst_cmp_oa (rst_cmp_oa),
+  .funct_en_1 (funct_en_1),
+  .addr (addr),
+  .nce_fl1 (nce_fl1),
+  .nce_fl2 (nce_fl2),
+  .en_gpio_fl1 (en_gpio_fl1),
+  .cpu_cfg (cpu_cfg),
+  .clk_a (clk_a),
+  .clk_gen_control (clk_gen_control),
+  .csa (csa),
+  .funct_en (funct_en),
+  .a_gpio (a_gpio),
+  .load_pdr_0 (load_pdr_0),
+  .load_pdr_5v5_1 (load_pdr_5v5_1),
+  .load_pdr_5v0_1 (load_pdr_5v0_1),
+  .load_pdr_4v5_1 (load_pdr_4v5_1),
+  
+  .gpio_io_32_49 (gpio_io_32_49),
+  .gpio_io_16_31 (gpio_io_16_31),
+  .gpio_io_0_15 (gpio_io_0_15)
 );
+
+
+
 
 assign my_tx_data = tx_data;
 assign my_tx_valid = tx_valid;

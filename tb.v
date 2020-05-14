@@ -48,6 +48,16 @@ wire [6:0] addr;
 wire [7:0] my_tx_data;
 wire my_tx_valid;
 reg [3:0] cmp_o;
+reg gpio_o_144_159;
+reg gpio_o_128_143;
+reg gpio_o_112_127;
+reg gpio_o_96_111; 
+reg gpio_o_80_95;
+reg gpio_o_64_79;
+reg gpio_o_48_63;
+reg gpio_o_32_47;
+reg gpio_o_16_31;
+reg gpio_o_0_15;
 
 
 
@@ -88,7 +98,20 @@ ast_upum i1 (
   .addr (addr),
   .my_tx_data (my_tx_data),
   .my_tx_valid (my_tx_valid),
-  .cmp_o (cmp_o)
+  .cmp_o (cmp_o),
+  //inout gpio_io_32_49,
+  //inout gpio_io_16_31,
+  //inout gpio_io_0_15,
+  .gpio_o_144_159 (gpio_o_144_159),
+  .gpio_o_128_143 (gpio_o_128_143),
+  .gpio_o_112_127 (gpio_o_112_127),
+  .gpio_o_96_111 (gpio_o_96_111),
+  .gpio_o_80_95 (gpio_o_80_95),
+  .gpio_o_64_79 (gpio_o_64_79),
+  .gpio_o_48_63 (gpio_o_48_63),
+  .gpio_o_32_47 (gpio_o_32_47),
+  .gpio_o_16_31 (gpio_o_16_31),
+  .gpio_o_0_15 (gpio_o_0_15)
 );
 
 
@@ -133,6 +156,17 @@ initial
   rx = 1;
   sclk_common = 1;
   cmp_o = 4'd6;
+  gpio_o_144_159 = 1;
+  gpio_o_128_143 = 0;
+  gpio_o_112_127 = 1;
+  gpio_o_96_111 = 0; 
+  gpio_o_80_95 = 1;
+  gpio_o_64_79 = 0;
+  gpio_o_48_63 = 1;
+  gpio_o_32_47 = 0;
+  gpio_o_16_31 = 1;
+  gpio_o_0_15 = 0;
+  
   #(CLK_T/4)  // initial offset to 1/4 of period for easier clocking
  
   #(10*CLK_T)
@@ -167,15 +201,15 @@ initial
   send_to_rx(8'hCC);  // crc
   
   send_to_rx(8'hDD);  // prefix
-  send_to_rx(8'h13);  // address of dest
+  send_to_rx(8'h17);  // address of dest
   send_to_rx(8'h01);  // len
   send_to_rx(8'h09);
   send_to_rx(8'hCC);  // crc
   
   send_to_rx(8'hDD);  // prefix
-  send_to_rx(8'h22);  // address of dest
+  send_to_rx(8'h0E);  // address of dest
   send_to_rx(8'h01);  // len
-  send_to_rx(8'hFF);
+  send_to_rx(8'h00);
   send_to_rx(8'hCC);  // crc
   /*
   send_to_rx(8'hDD);  // prefix
