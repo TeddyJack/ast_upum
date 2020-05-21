@@ -5,8 +5,8 @@ module cmd_encoder (
   input                 clk,
   
   input  [1*`N_SRC-1:0] have_msg_bus,
-  input  [8*`N_SRC-1:0] data_bus,
-  input  [8*`N_SRC-1:0] len_bus,
+  input  [8*`N_INPUTS-1:0] data_bus,
+  input  [8*`N_INPUTS-1:0] len_bus,
   output [1*`N_SRC-1:0] rdreq_bus,
   
   output reg [7:0]      tx_data,
@@ -16,9 +16,10 @@ module cmd_encoder (
 
 
 
+
 reg [7:0] current_len;
 reg [($clog2(`N_SRC)-1):0] current_source;
-wire [7:0] current_data = data_bus[8*current_source+:8];
+
 
 reg [2:0] state;
 localparam [2:0] IDLE         = 0;
@@ -34,6 +35,17 @@ reg rdreq;
 assign rdreq_bus = rdreq << current_source;
 
 wire transition_cond = tx_ready & !tx_valid & ((state != IDLE) | have_msg_bus[current_source]);
+
+reg [($clog2(`N_INPUTS)-1):0] current_input;
+always @ *
+  if (current_source <= 3)        current_input = 0;
+  else if (current_source <= 7)   current_input = 1;
+  else if (current_source == 8)   current_input = 2;
+  else if (current_source <= 12)  current_input = 3;
+  else if (current_source <= 39)  current_input = 4;
+  else                            current_input = 0;
+
+wire [7:0] current_data = data_bus[8*current_input+:8];
 
 
 always@(posedge clk or negedge n_rst)
@@ -77,8 +89,8 @@ always@(posedge clk or negedge n_rst)
       SEND_SOURCE:
         begin
         state <= SEND_LEN;
-        tx_data <= len_bus[8*current_source+:8];
-        current_len <= len_bus[8*current_source+:8];
+        tx_data <= len_bus[8*current_input+:8];
+        current_len <= len_bus[8*current_input+:8];
         end
       SEND_LEN:
         begin

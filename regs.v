@@ -7,8 +7,9 @@ module regs #(
   input      [N*1-1:0] valid_bus,
   input      [N*1-1:0] rdreq_bus,
   output reg [N*1-1:0] have_msg_bus,
-  output     [N*8-1:0] slave_data_bus,
-  output     [N*8-1:0] len_bus,
+  
+  output     [7:0] len,
+  output     [7:0] slave_data,
   // inputs
   input       sbis_functcontrol_stop,
   input [3:0] cmp_o,
@@ -52,6 +53,7 @@ module regs #(
   
 );
 
+wire [N*8-1:0] slave_data_bus;
 reg [2:0] gpio_z_state;
 reg [2:0] reg_io_0_49;
 assign gpio_io_32_49 = gpio_z_state[2] ? 1'bz : reg_io_0_49[2];
@@ -60,7 +62,7 @@ assign gpio_io_0_15 = gpio_z_state[0] ? 1'bz : reg_io_0_49[0];
 
 
 
-assign len_bus = {N{8'd1}};
+assign len = 8'd1;
 
 // inputs
 assign slave_data_bus[0*8+:8] =  {7'b0, sbis_functcontrol_stop};
@@ -169,6 +171,17 @@ always @ (posedge clk or negedge n_rst)
       have_msg_bus <= valid_bus;
     end
 
+
+
+muxer_unitary #(
+  .WIDTH (8),
+  .NUM (N)
+)
+muxer_unitary (
+  .data_in_bus (slave_data_bus),
+  .ena_in_bus (have_msg_bus),
+  .data_out (slave_data)
+);
 
 
 

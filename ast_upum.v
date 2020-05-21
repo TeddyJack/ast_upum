@@ -112,8 +112,8 @@ wire tx_ready;
 wire [7:0] master_data;
 wire [1*`N_SRC-1:0] valid_bus;
 wire [1*`N_SRC-1:0] have_msg_bus;
-wire [8*`N_SRC-1:0] slave_data_bus;
-wire [8*`N_SRC-1:0] len_bus;
+wire [8*`N_INPUTS-1:0] slave_data_bus;
+wire [8*`N_INPUTS-1:0] len_bus;
 wire [1*`N_SRC-1:0] rdreq_bus;
 
 
@@ -181,8 +181,8 @@ pot_power (
   .n_cs_bus     ({sync_limit_input, sync_avdd, sync_dvdd, sync_vdd}),  
   .m_din        (master_data),
   .m_wrreq_bus  (valid_bus[3:0]),
-  .s_dout_bus   (slave_data_bus[8*0+:8*4]),
-  .len_bus      (len_bus[8*0+:8*4]),
+  .s_dout   (slave_data_bus[0*8+:8]),
+  .len      (len_bus[0*8+:8]),
   .have_msg_bus (have_msg_bus[3:0]),
   .s_rdreq_bus  (rdreq_bus[3:0])
 );
@@ -206,8 +206,8 @@ pot_cmp_oa (
   .n_cs_bus     ({sync_oa_1, sync_oa_0, sync_cmp_b, sync_cmp_a}),  
   .m_din        (master_data),
   .m_wrreq_bus  (valid_bus[7:4]),
-  .s_dout_bus   (slave_data_bus[8*4+:8*4]),
-  .len_bus      (len_bus[8*4+:8*4]),
+  .s_dout   (slave_data_bus[1*8+:8]),
+  .len      (len_bus[1*8+:8]),
   .have_msg_bus (have_msg_bus[7:4]),
   .s_rdreq_bus  (rdreq_bus[7:4])
 );
@@ -231,9 +231,9 @@ adc_power (
   .in_data     (master_data),
   .in_ena      (valid_bus[8]),
   .enc_rdreq   (rdreq_bus[8]),
-  .out_data    (slave_data_bus[8*8+:8*1]),
+  .out_data    (slave_data_bus[2*8+:8]),
   .have_msg    (have_msg_bus[8]),
-  .len         (len_bus[8*8+:8*1])
+  .len         (len_bus[2*8+:8])
 );
 
 
@@ -255,8 +255,8 @@ adcs (
   .n_cs_bus    ({adc_cs_3, adc_cs_2, adc_cs_1}),  
   .m_din       (master_data),
   .m_wrreq_bus (valid_bus[11:9]),
-  .s_dout_bus  (slave_data_bus[8*9+:8*3]),
-  .len_bus     (len_bus[8*9+:8*3]),
+  .s_dout  (slave_data_bus[3*8+:8]),
+  .len     (len_bus[3*8+:8]),
   .have_msg_bus(have_msg_bus[11:9]),
   .s_rdreq_bus (rdreq_bus[11:9])
 );
@@ -271,8 +271,8 @@ regs regs (
   .valid_bus (valid_bus[38:12]),
   .rdreq_bus (rdreq_bus[38:12]),
   .have_msg_bus (have_msg_bus[38:12]),
-  .slave_data_bus (slave_data_bus[38*8+7:12*8]),
-  .len_bus (len_bus[38*8+7:12*8]),
+  .slave_data (slave_data_bus[4*8+:8]),
+  .len (len_bus[4*8+:8]),
   
   .sbis_functcontrol_stop (sbis_functcontrol_stop),
   .cmp_o (cmp_o),

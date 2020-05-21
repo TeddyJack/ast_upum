@@ -22,39 +22,25 @@ module if_spi_multi #(
   input   [1*N_SLAVES-1:0]  m_wrreq_bus,  // reduce to one
   
   input   [1*N_SLAVES-1:0]  s_rdreq_bus,  // reduce to one
-  output  [8*N_SLAVES-1:0]  s_dout_bus,   // replicate to N
+  output  [7:0]  s_dout,   // replicate to N
   output  [1*N_SLAVES-1:0]  have_msg_bus, // 
-  output  [8*N_SLAVES-1:0]  len_bus       // replicate to N
+  output  [7:0]  len       // replicate to N
 );
 
 
 wire [7:0] s_din;
 wire s_wrreq;
 wire s_empty;
-wire [7:0] s_dout;
 wire s_rdreq = |s_rdreq_bus;
 // wire [7:0] m_din           // declared in ports
 wire m_wrreq = |m_wrreq_bus;
 wire m_empty;
 wire [7:0] m_dout;
 wire m_rdreq;
-wire [7:0] len;
 reg [1*N_SLAVES-1:0] select_unitary;
 assign have_msg_bus = ~{N_SLAVES{s_empty}} & select_unitary;
 wire n_cs;
 assign n_cs_bus = {N_SLAVES{n_cs}} | ~select_unitary;
-
-genvar i, j;
-generate
-  for(i = 0; i < N_SLAVES; i = i + 1)
-  begin: outer
-    for(j = 0; j < 8; j = j + 1)
-      begin: inner
-      assign s_dout_bus[8*i+j] = s_dout[j];
-      assign len_bus[8*i+j] = len[j];
-      end
-  end
-endgenerate
 
 
 
