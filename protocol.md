@@ -43,16 +43,15 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 0x19    | Flash mem     | 46               | IO   | w    | nce_fl2                |
   | 0x1A    | Level transl  | 40-44            | IO   | w    | en_gpio_fl1            |
   | 0x1B    | SBIS UPUM     |                  | IO   | w    | cpu_cfg                |
-  | 0x1C    | SBIS UPUM     |                  | IO   | w    | clk_a                  |
-  | 0x1D    | SBIS UPUM     |                  | IO   | w    | clk_gen_control        |
-  | 0x1E    | SBIS UPUM     |                  | IO   | w    | csa                    |
-  | 0x1F    | Level transl  | 26-28,37,38,     | IO   | w    | funct_en               |
+  | 0x1C    | SBIS UPUM     |                  | IO   | w    | clk_gen_control        |
+  | 0x1D    | SBIS UPUM     |                  | IO   | w    | csa                    |
+  | 0x1E    | Level transl  | 26-28,37,38,     | IO   | w    | funct_en               |
   |         |               | 47-49,66-69      |      |      |                        |
-  | 0x20    | Mux/demux     | 6-15,31-33       | IO   | w    | a_gpio                 |
-  | 0x21    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_0             |
-  | 0x22    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v5_1         |
-  | 0x23    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v0_1         |
-  | 0x24    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
-  | 0x25    | Mux/demux     | 31-33            | IO   | w/r  | gpio_io_0-49           |
-  | 0x26    | special       |                  | IO   | w    | gpio_z_state           |
-            
+  | 0x1F    | Mux/demux     | 6-15,31-33       | IO   | w    | a_gpio                 |
+  | 0x20    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_0             |
+  | 0x21    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v5_1         |
+  | 0x22    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v0_1         |
+  | 0x23    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
+  | 0x24    | Mux/demux     | 31-33            | IO   | w/r  | gpio_io_0-49           |
+  | 0x25    | special       |                  | IO   | w    | gpio_z_state           |
+    0x26        

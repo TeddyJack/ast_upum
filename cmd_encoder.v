@@ -38,12 +38,12 @@ wire transition_cond = tx_ready & !tx_valid & ((state != IDLE) | have_msg_bus[cu
 
 reg [($clog2(`N_INPUTS)-1):0] current_input;
 always @ *
-  if (current_source <= 3)        current_input = 0;
-  else if (current_source <= 7)   current_input = 1;
-  else if (current_source == 8)   current_input = 2;
-  else if (current_source <= 12)  current_input = 3;
-  else if (current_source <= 39)  current_input = 4;
-  else                            current_input = 0;
+  if      (current_source <= 8'h03) current_input = 0;
+  else if (current_source <= 8'h07) current_input = 1;
+  else if (current_source == 8'h08) current_input = 2;
+  else if (current_source <= 8'h0B) current_input = 3;
+  else if (current_source <= 8'h25) current_input = 4;
+  else                              current_input = 0;
 
 wire [7:0] current_data = data_bus[8*current_input+:8];
 

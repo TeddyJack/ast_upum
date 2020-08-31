@@ -1,5 +1,5 @@
 module regs #(
-  parameter N = 4+21+1+1 // inputs + outputs + inouts + special
+  parameter N = 4+20+1+1 // inputs + outputs + inouts + special
 )(
   input                n_rst,
   input                clk,
@@ -36,7 +36,6 @@ module regs #(
   output reg       nce_fl2,
   output reg       en_gpio_fl1,
   output reg [1:0] cpu_cfg,
-  output reg       clk_a,
   output reg       clk_gen_control,
   output reg       csa,
   output reg       funct_en,
@@ -85,19 +84,18 @@ assign slave_data_bus[12*8+:8] = {7'b0, nce_fl1};
 assign slave_data_bus[13*8+:8] = {7'b0, nce_fl2};
 assign slave_data_bus[14*8+:8] = {7'b0, en_gpio_fl1};
 assign slave_data_bus[15*8+:8] = {6'b0, cpu_cfg};
-assign slave_data_bus[16*8+:8] = {7'b0, clk_a};
-assign slave_data_bus[17*8+:8] = {7'b0, clk_gen_control};
-assign slave_data_bus[18*8+:8] = {7'b0, csa};
-assign slave_data_bus[19*8+:8] = {7'b0, funct_en};
-assign slave_data_bus[20*8+:8] = {4'b0, a_gpio};
-assign slave_data_bus[21*8+:8] = {7'b0, load_pdr_0};
-assign slave_data_bus[22*8+:8] = {7'b0, load_pdr_5v5_1};
-assign slave_data_bus[23*8+:8] = {7'b0, load_pdr_5v0_1};
-assign slave_data_bus[24*8+:8] = {7'b0, load_pdr_4v5_1};
+assign slave_data_bus[16*8+:8] = {7'b0, clk_gen_control};
+assign slave_data_bus[17*8+:8] = {7'b0, csa};
+assign slave_data_bus[18*8+:8] = {7'b0, funct_en};
+assign slave_data_bus[19*8+:8] = {4'b0, a_gpio};
+assign slave_data_bus[20*8+:8] = {7'b0, load_pdr_0};
+assign slave_data_bus[21*8+:8] = {7'b0, load_pdr_5v5_1};
+assign slave_data_bus[22*8+:8] = {7'b0, load_pdr_5v0_1};
+assign slave_data_bus[23*8+:8] = {7'b0, load_pdr_4v5_1};
 // inouts
-assign slave_data_bus[25*8+:8] = {5'b0, gpio_io_32_49, gpio_io_16_31, gpio_io_0_15};
+assign slave_data_bus[24*8+:8] = {5'b0, gpio_io_32_49, gpio_io_16_31, gpio_io_0_15};
 // special
-assign slave_data_bus[26*8+:8] = {5'b0, gpio_z_state};
+assign slave_data_bus[25*8+:8] = {5'b0, gpio_z_state};
 
 
 
@@ -117,7 +115,6 @@ always @ (posedge clk or negedge n_rst)
     nce_fl2         <= 1'b0;
     en_gpio_fl1     <= 1'b0;
     cpu_cfg         <= 1'b0;
-    clk_a           <= 1'b0;
     clk_gen_control <= 1'b0;
     csa             <= 1'b0;
     funct_en        <= 1'b0;
@@ -143,17 +140,16 @@ always @ (posedge clk or negedge n_rst)
     if (valid_bus[13])  nce_fl2         <= master_data[0];
     if (valid_bus[14])  en_gpio_fl1     <= master_data[0];
     if (valid_bus[15])  cpu_cfg         <= master_data[1:0];
-    if (valid_bus[16])  clk_a           <= master_data[0];
-    if (valid_bus[17])  clk_gen_control <= master_data[0];
-    if (valid_bus[18])  csa             <= master_data[0];
-    if (valid_bus[19])  funct_en        <= master_data[0];
-    if (valid_bus[20])  a_gpio          <= master_data[3:0];
-    if (valid_bus[21])  load_pdr_0      <= master_data[0];
-    if (valid_bus[22])  load_pdr_5v5_1  <= master_data[0];
-    if (valid_bus[23])  load_pdr_5v0_1  <= master_data[0];
-    if (valid_bus[24])  load_pdr_4v5_1  <= master_data[0];
-    if (valid_bus[25])  reg_io_0_49     <= master_data[2:0];
-    if (valid_bus[26])  gpio_z_state    <= master_data[2:0];
+    if (valid_bus[16])  clk_gen_control <= master_data[0];
+    if (valid_bus[17])  csa             <= master_data[0];
+    if (valid_bus[18])  funct_en        <= master_data[0];
+    if (valid_bus[19])  a_gpio          <= master_data[3:0];
+    if (valid_bus[20])  load_pdr_0      <= master_data[0];
+    if (valid_bus[21])  load_pdr_5v5_1  <= master_data[0];
+    if (valid_bus[22])  load_pdr_5v0_1  <= master_data[0];
+    if (valid_bus[23])  load_pdr_4v5_1  <= master_data[0];
+    if (valid_bus[24])  reg_io_0_49     <= master_data[2:0];
+    if (valid_bus[25])  gpio_z_state    <= master_data[2:0];
     
     end
 
