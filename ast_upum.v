@@ -4,7 +4,7 @@ module ast_upum (
   // debug ports
   input sclk_common,
   input clk_100,  // assign to pin_153
-  input n_rst,
+  input n_rst_btn,
   // UART
   input rx,
   output tx,/*
@@ -115,6 +115,8 @@ wire [1*`N_SRC-1:0] have_msg_bus;
 wire [8*`N_INPUTS-1:0] slave_data_bus;
 wire [8*`N_INPUTS-1:0] len_bus;
 wire [1*`N_SRC-1:0] rdreq_bus;
+wire n_rst_ext;
+wire n_rst = n_rst_btn & n_rst_ext;
 
 
 
@@ -164,7 +166,22 @@ uart uart (
 
 
 
-// addresses 0x00-0x03
+// address 0x00
+keep_alive keep_alive (
+  .n_rst    (n_rst),
+  .clk      (sys_clk),
+  .data     (master_data),
+  .ena      (valid_bus[0]),
+  .have_msg (have_msg_bus[0]),
+  .rdreq    (rdreq_bus[0]),
+  .data_out (slave_data_bus[0*8+:8]),
+  .len      (len_bus[0*8+:8]),
+  .n_rst_ext(n_rst_ext)
+);
+
+
+
+// addresses 0x01-0x04
 if_spi_multi #(
   .N_SLAVES(4),
   .CPOL(0),
@@ -180,16 +197,16 @@ pot_power (
   .miso         (),
   .n_cs_bus     ({sync_limit_input, sync_avdd, sync_dvdd, sync_vdd}),  
   .m_din        (master_data),
-  .m_wrreq_bus  (valid_bus[3:0]),
-  .s_dout   (slave_data_bus[0*8+:8]),
-  .len      (len_bus[0*8+:8]),
-  .have_msg_bus (have_msg_bus[3:0]),
-  .s_rdreq_bus  (rdreq_bus[3:0])
+  .m_wrreq_bus  (valid_bus[4:1]),
+  .s_dout   (slave_data_bus[1*8+:8]),
+  .len      (len_bus[1*8+:8]),
+  .have_msg_bus (have_msg_bus[4:1]),
+  .s_rdreq_bus  (rdreq_bus[4:1])
 );
 
 
 
-// addresses 0x04-0x07
+// addresses 0x05-0x08
 if_spi_multi #(
   .N_SLAVES(4),
   .CPOL(0),
@@ -205,16 +222,16 @@ pot_cmp_oa (
   .miso         (),
   .n_cs_bus     ({sync_oa_1, sync_oa_0, sync_cmp_b, sync_cmp_a}),  
   .m_din        (master_data),
-  .m_wrreq_bus  (valid_bus[7:4]),
-  .s_dout   (slave_data_bus[1*8+:8]),
-  .len      (len_bus[1*8+:8]),
-  .have_msg_bus (have_msg_bus[7:4]),
-  .s_rdreq_bus  (rdreq_bus[7:4])
+  .m_wrreq_bus  (valid_bus[8:5]),
+  .s_dout   (slave_data_bus[2*8+:8]),
+  .len      (len_bus[2*8+:8]),
+  .have_msg_bus (have_msg_bus[8:5]),
+  .s_rdreq_bus  (rdreq_bus[8:5])
 );
 
 
 
-// address 0x08
+// address 0x09
 if_spi #(
   .CPOL(1),
   .CPHA(1),
@@ -229,16 +246,16 @@ adc_power (
   .mosi        (pwr_adc_din),
   .miso        (pwr_adc_dout),
   .in_data     (master_data),
-  .in_ena      (valid_bus[8]),
-  .enc_rdreq   (rdreq_bus[8]),
-  .out_data    (slave_data_bus[2*8+:8]),
-  .have_msg    (have_msg_bus[8]),
-  .len         (len_bus[2*8+:8])
+  .in_ena      (valid_bus[9]),
+  .enc_rdreq   (rdreq_bus[9]),
+  .out_data    (slave_data_bus[3*8+:8]),
+  .have_msg    (have_msg_bus[9]),
+  .len         (len_bus[3*8+:8])
 );
 
 
 
-// addresses 0x09-0x0B
+// addresses 0x0A-0x0C
 if_spi_multi #(
   .N_SLAVES(3),
   .CPOL(1),
@@ -254,25 +271,25 @@ adcs (
   .miso        (adc_dout),
   .n_cs_bus    ({adc_cs_3, adc_cs_2, adc_cs_1}),  
   .m_din       (master_data),
-  .m_wrreq_bus (valid_bus[11:9]),
-  .s_dout  (slave_data_bus[3*8+:8]),
-  .len     (len_bus[3*8+:8]),
-  .have_msg_bus(have_msg_bus[11:9]),
-  .s_rdreq_bus (rdreq_bus[11:9])
+  .m_wrreq_bus (valid_bus[12:10]),
+  .s_dout  (slave_data_bus[4*8+:8]),
+  .len     (len_bus[4*8+:8]),
+  .have_msg_bus(have_msg_bus[12:10]),
+  .s_rdreq_bus (rdreq_bus[12:10])
 );
 
 
 
-// addresses 0x0C-0x25
+// addresses 0x0D-0x26
 regs regs (
   .n_rst (n_rst),
   .clk (sys_clk),
   .master_data (master_data),
-  .valid_bus (valid_bus[37:12]),
-  .rdreq_bus (rdreq_bus[37:12]),
-  .have_msg_bus (have_msg_bus[37:12]),
-  .slave_data (slave_data_bus[4*8+:8]),
-  .len (len_bus[4*8+:8]),
+  .valid_bus (valid_bus[38:13]),
+  .rdreq_bus (rdreq_bus[38:13]),
+  .have_msg_bus (have_msg_bus[38:13]),
+  .slave_data (slave_data_bus[5*8+:8]),
+  .len (len_bus[5*8+:8]),
   
   .sbis_functcontrol_stop (sbis_functcontrol_stop),
   .cmp_o (cmp_o),

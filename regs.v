@@ -128,6 +128,7 @@ always @ (posedge clk or negedge n_rst)
     end
   else
     begin
+    // valid_bus[0]... [3] are missing because they are read only
     if (valid_bus[4])   rst_power       <= master_data[0];
     if (valid_bus[5])   off_vdd         <= master_data[0];
     if (valid_bus[6])   off_dvdd        <= master_data[0];

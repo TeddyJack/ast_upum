@@ -81,7 +81,7 @@ ast_upum i1 (
   .pwr_adc_sclk (pwr_adc_sclk),
   .rst_cmp_oa (rst_cmp_oa),
   .rst_power (rst_power),
-  .n_rst (n_rst),
+  .n_rst_btn (n_rst),
   .rx (rx),
   .sclk_cmp_oa (sclk_cmp_oa),
   .sclk_common (sclk_common),
@@ -175,44 +175,56 @@ initial
 
   #(1000*CLK_T)
   /*
-  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'hEE);  // prefix
   send_to_rx(8'h16);  // address of dest
   send_to_rx(8'h01);  // len
   send_to_rx(8'hAE);
   send_to_rx(8'hAE);  // crc
   */
   
-  send_to_rx(8'hDD);  // prefix
-  send_to_rx(8'h08);  // address of dest
-  send_to_rx(8'd02);  // len
-  send_to_rx(8'h16); send_to_rx(8'h1D);  // black level lsb, msb
-  send_to_rx(8'hCC);  // crc
-  
-  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'hEE);  // prefix
   send_to_rx(8'h09);  // address of dest
-  send_to_rx(8'h02);  // len
-  send_to_rx(8'hA0); send_to_rx(8'h50);
+  send_to_rx(8'd02);  // len
+  send_to_rx(8'h16); send_to_rx(8'h1D);
   send_to_rx(8'hCC);  // crc
   
-  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'hEE);  // prefix
   send_to_rx(8'h0A);  // address of dest
   send_to_rx(8'h02);  // len
   send_to_rx(8'hA0); send_to_rx(8'h50);
   send_to_rx(8'hCC);  // crc
   
-  send_to_rx(8'hDD);  // prefix
-  send_to_rx(8'h17);  // address of dest
+  send_to_rx(8'hEE);  // prefix
+  send_to_rx(8'h0B);  // address of dest
+  send_to_rx(8'h02);  // len
+  send_to_rx(8'hA0); send_to_rx(8'h50);
+  send_to_rx(8'hCC);  // crc
+  
+  send_to_rx(8'hEE);  // prefix
+  send_to_rx(8'h18);  // address of dest
   send_to_rx(8'h01);  // len
   send_to_rx(8'h09);
   send_to_rx(8'hCC);  // crc
   
-  send_to_rx(8'hDD);  // prefix
-  send_to_rx(8'h0E);  // address of dest
+  send_to_rx(8'hEE);  // prefix
+  send_to_rx(8'h0F);  // address of dest
   send_to_rx(8'h01);  // len
   send_to_rx(8'h00);
   send_to_rx(8'hCC);  // crc
+  
+  send_to_rx(8'hEE);  // prefix
+  send_to_rx(8'h00);  // address of dest
+  send_to_rx(8'h01);  // len
+  send_to_rx(8'hAE);
+  send_to_rx(8'hCC);  // crc
+  
+  send_to_rx(8'hEE);  // prefix
+  send_to_rx(8'h00);  // address of dest
+  send_to_rx(8'h01);  // len
+  send_to_rx(8'hF0);
+  send_to_rx(8'hCC);  // crc
   /*
-  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'hEE);  // prefix
   send_to_rx(8'h10);  // address of dest
   send_to_rx(8'd64);  // len
   for(b=1; b<=64; b=b+1)
@@ -224,7 +236,7 @@ initial
   
   #5000
   
-  send_to_rx(8'hDD);  // prefix
+  send_to_rx(8'hEE);  // prefix
   send_to_rx(8'h15);  // address of dest
   send_to_rx(8'd01);  // len
   send_to_rx(8'h55);  // stop send
