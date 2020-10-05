@@ -1,14 +1,11 @@
 `timescale 1 ns / 1 ns  // timescale units / timescale precision
 `define TUPS 1000000000 // timescale units per second. if 1 ns then TUPS = 10^9
 `include "defines.v"
-`define SCLK 25  // in MHz
 
 
 module tb();
 
-reg sclk_common;
 reg clk_100;
-reg n_rst;
 
 reg rx;
 wire tx;
@@ -81,10 +78,8 @@ ast_upum i1 (
   .pwr_adc_sclk (pwr_adc_sclk),
   .rst_cmp_oa (rst_cmp_oa),
   .rst_power (rst_power),
-  .n_rst_btn (n_rst),
   .rx (rx),
   .sclk_cmp_oa (sclk_cmp_oa),
-  .sclk_common (sclk_common),
   .sclk_power (sclk_power),
   .sync_avdd (sync_avdd),
   .sync_cmp_a (sync_cmp_a),
@@ -119,7 +114,6 @@ ast_upum i1 (
 integer UART_D = `TUPS / `BAUDRATE;  // duration of each UART bit in ns
 integer CLK_T = `TUPS / (`SYS_CLK * 1000000);
 integer CLK_HALF = `TUPS / (`SYS_CLK * 1000000) / 2;
-integer SCLK_HALF = `TUPS / (`SCLK * 1000000) / 2;
 
 
 task automatic send_to_rx;
@@ -138,11 +132,10 @@ endtask
 
 // generating clocks
 always #CLK_HALF clk_100 = !clk_100;
-always #SCLK_HALF sclk_common = !sclk_common;
 
 
 
-integer b;
+//integer b;
 
 
 initial
@@ -152,9 +145,7 @@ initial
   adc_dout = 0;
   clk_100 = 1;
   pwr_adc_dout = 0;
-  n_rst = 0;
   rx = 1;
-  sclk_common = 1;
   cmp_o = 4'd6;
   gpio_o_144_159 = 1;
   gpio_o_128_143 = 0;
@@ -171,7 +162,6 @@ initial
  
   #(10*CLK_T)
   
-  n_rst = 1;
 
   #(1000*CLK_T)
   /*
