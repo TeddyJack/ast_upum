@@ -4,7 +4,7 @@ module spi_master_byte #(
   parameter [0:0] CPOL = 1,
   parameter [0:0] CPHA = 0,
   parameter [7:0] BYTES_PER_FRAME = 3,
-  parameter [2:0] PAUSE = 4,
+  parameter [2:0] PAUSE_MINUS_ONE = 7,
   parameter [0:0] BIDIR = 1,
   parameter [7:0] SWAP_DIR_BIT_NUM = 7,   // after which bit (count from 0) high_z sets to "1"
   parameter [0:0] SCLK_CONST = 0
@@ -68,7 +68,7 @@ generate
     always @ (negedge sys_clk or negedge n_rst)
       if (!n_rst)
         begin
-        bit_cnt <= PAUSE - 1'b1;
+        bit_cnt <= PAUSE_MINUS_ONE;
         mosi_reg <= 0;
         byte_cnt <= BYTES_PER_FRAME - 1'b1;
         master_rdreq <= 0;
@@ -92,7 +92,7 @@ generate
             if ((byte_cnt == 1'b0) | master_empty)
               begin
               n_cs_pha <= 1;
-              bit_cnt <= PAUSE - 1'b1;
+              bit_cnt <= PAUSE_MINUS_ONE;
               end
             else
               bit_cnt <= 7;   // or bit_cnt <= bit_cnt - 1'b1;
@@ -131,7 +131,7 @@ generate
     always @ (posedge sys_clk or negedge n_rst)
       if (!n_rst)
         begin
-        bit_cnt <= PAUSE - 1'b1;
+        bit_cnt <= PAUSE_MINUS_ONE;
         mosi_reg <= 0;
         byte_cnt <= BYTES_PER_FRAME - 1'b1;
         master_rdreq <= 0;
@@ -155,7 +155,7 @@ generate
             if ((byte_cnt == 1'b0) | master_empty)
               begin
               n_cs_pha <= 1;
-              bit_cnt <= PAUSE - 1'b1;
+              bit_cnt <= PAUSE_MINUS_ONE;
               end
             else
               bit_cnt <= 7;   // or bit_cnt <= bit_cnt - 1'b1;

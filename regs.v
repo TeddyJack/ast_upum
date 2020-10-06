@@ -6,7 +6,7 @@ module regs #(
   input      [7:0]     master_data,
   input      [N*1-1:0] valid_bus,
   input      [N*1-1:0] rdreq_bus,
-  output reg [N*1-1:0] have_msg_bus,
+  output     [N*1-1:0] have_msg_bus,
   
   output     [7:0] len,
   output     [7:0] slave_data,
@@ -103,12 +103,12 @@ assign slave_data_bus[25*8+:8] = {5'b0, gpio_z_state};
 always @ (posedge clk or negedge n_rst)
   if (!n_rst)
     begin
-    rst_power       <= 1'b0;
-    off_vdd         <= 1'b0;
-    off_dvdd        <= 1'b0;
-    off_avdd        <= 1'b0;
-    off_limit_input <= 1'b0;
-    rst_cmp_oa      <= 1'b0;
+    rst_power       <= 1'b1;
+    off_vdd         <= 1'b1;
+    off_dvdd        <= 1'b1;
+    off_avdd        <= 1'b1;
+    off_limit_input <= 1'b1;
+    rst_cmp_oa      <= 1'b1;
     funct_en_1      <= 1'b0;
     addr            <= 7'h7F;
     nce_fl1         <= 1'b0;
@@ -117,7 +117,7 @@ always @ (posedge clk or negedge n_rst)
     cpu_cfg         <= 1'b0;
     clk_gen_control <= 1'b0;
     csa             <= 1'b0;
-    funct_en        <= 1'b0;
+    funct_en        <= 1'b1;
     a_gpio          <= 4'd0;
     load_pdr_0      <= 1'b0;
     load_pdr_5v5_1  <= 1'b0;
@@ -156,17 +156,17 @@ always @ (posedge clk or negedge n_rst)
 
 
 
-
-always @ (posedge clk or negedge n_rst)
-  if (!n_rst)
-    have_msg_bus <= 0;
-  else
-    begin
-    if (rdreq_bus)                // if any of rdreq_bus[i] == 1'b1
-      have_msg_bus <= 0;
-    else if (valid_bus)           // if any of valid_bus[i] == 1'b1
-      have_msg_bus <= valid_bus;
-    end
+assign have_msg_bus = 0;
+//always @ (posedge clk or negedge n_rst)
+//  if (!n_rst)
+//    have_msg_bus <= 0;
+//  else
+//    begin
+//    if (rdreq_bus)                // if any of rdreq_bus[i] == 1'b1
+//      have_msg_bus <= 0;
+//    else if (valid_bus)           // if any of valid_bus[i] == 1'b1
+//      have_msg_bus <= valid_bus;
+//    end
 
 
 
