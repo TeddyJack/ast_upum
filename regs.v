@@ -155,18 +155,25 @@ always @ (posedge clk or negedge n_rst)
     end
 
 
+reg [4:0] have_msg_regs;                        // because we have 4 READ-addresses + 1 RW-address
+assign have_msg_bus[25] = 0;                    // this address is WRITE
+assign have_msg_bus[24] = have_msg_regs[4];     // this address is READ / WRITE
+assign have_msg_bus[23:4] = 0;                  // these addresses are WRITE
+assign have_msg_bus[3:0] = have_msg_regs[3:0];  // these addresses are READ
+wire [4:0] rdreq_bus_inner = {rdreq_bus[24], rdreq_bus[3:0]};
+wire [4:0] valid_bus_inner = {valid_bus[24], valid_bus[3:0]};
 
-assign have_msg_bus = 0;
-//always @ (posedge clk or negedge n_rst)
-//  if (!n_rst)
-//    have_msg_bus <= 0;
-//  else
-//    begin
-//    if (rdreq_bus)                // if any of rdreq_bus[i] == 1'b1
-//      have_msg_bus <= 0;
-//    else if (valid_bus)           // if any of valid_bus[i] == 1'b1
-//      have_msg_bus <= valid_bus;
-//    end
+
+always @ (posedge clk or negedge n_rst)
+  if (!n_rst)
+    have_msg_regs <= 0;
+  else
+    begin
+    if (rdreq_bus_inner)               // if any of rdreq_bus[i] == 1'b1
+      have_msg_regs <= 0;
+    else if (valid_bus_inner)           // if any of valid_bus[i] == 1'b1
+      have_msg_regs <= valid_bus_inner;
+    end
 
 
 
