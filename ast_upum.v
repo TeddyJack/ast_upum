@@ -118,6 +118,7 @@ wire pll_locked;
 wire n_rst = pll_locked & n_rst_ext;
 wire sclk_common;
 assign rst_n = 1'b1;
+assign clk_a = sclk_common;
 
 
 
