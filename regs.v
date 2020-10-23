@@ -1,5 +1,5 @@
 module regs #(
-  parameter N = 4+20+1+1 // inputs + outputs + inouts + special
+  parameter N = 4+21+1+2 // inputs + outputs + inouts + special
 )(
   input                n_rst,
   input                clk,
@@ -44,6 +44,8 @@ module regs #(
   output reg       load_pdr_5v5_1,
   output reg       load_pdr_5v0_1,
   output reg       load_pdr_4v5_1,
+  output reg       i2c_speed,
+  output reg       rstn,
   // inouts
   inout gpio_io_32_49,
   inout gpio_io_16_31,
@@ -96,6 +98,8 @@ assign slave_data_bus[23*8+:8] = {7'b0, load_pdr_4v5_1};
 assign slave_data_bus[24*8+:8] = {5'b0, gpio_io_32_49, gpio_io_16_31, gpio_io_0_15};
 // special
 assign slave_data_bus[25*8+:8] = {5'b0, gpio_z_state};
+assign slave_data_bus[26*8+:8] = {7'b0, rstn};
+assign slave_data_bus[27*8+:8] = {7'b0, i2c_speed};
 
 
 
@@ -125,6 +129,8 @@ always @ (posedge clk or negedge n_rst)
     load_pdr_4v5_1  <= 1'b0;
     reg_io_0_49     <= 3'b0;
     gpio_z_state    <= 3'b111;
+    i2c_speed       <= 1'b1;
+    rstn            <= 1'b0;
     end
   else
     begin
@@ -151,12 +157,13 @@ always @ (posedge clk or negedge n_rst)
     if (valid_bus[23])  load_pdr_4v5_1  <= master_data[0];
     if (valid_bus[24])  reg_io_0_49     <= master_data[2:0];
     if (valid_bus[25])  gpio_z_state    <= master_data[2:0];
-    
+    if (valid_bus[26])  rstn            <= master_data[0];
+    if (valid_bus[27])  i2c_speed       <= master_data[0];
     end
 
 
 reg [4:0] have_msg_regs;                        // because we have 4 READ-addresses + 1 RW-address
-assign have_msg_bus[25] = 0;                    // this address is WRITE
+assign have_msg_bus[27:25] = 0;                 // these addresses are WRITE
 assign have_msg_bus[24] = have_msg_regs[4];     // this address is READ / WRITE
 assign have_msg_bus[23:4] = 0;                  // these addresses are WRITE
 assign have_msg_bus[3:0] = have_msg_regs[3:0];  // these addresses are READ

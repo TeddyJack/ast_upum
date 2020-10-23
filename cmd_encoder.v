@@ -43,7 +43,8 @@ always @ *
   else if (current_source <= 8'h08) current_input = 2;
   else if (current_source == 8'h09) current_input = 3;
   else if (current_source <= 8'h0C) current_input = 4;
-  else if (current_source <= 8'h26) current_input = 5;
+  else if (current_source <= 8'h28) current_input = 5;
+  else if (current_source <= 8'h34) current_input = 6;
   else                              current_input = 0;
 
 wire [7:0] current_data = data_bus[8*current_input+:8];

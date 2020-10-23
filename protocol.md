@@ -56,18 +56,20 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 0x24    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
   | 0x25    | Mux/demux     | 31-33            | IO   | w/r  | gpio_io_0-49           |
   | 0x26    | special       |                  | IO   | w    | gpio_z_state           |
-  | 0x27    | SBIS UPUM     |                  | I2C  | w/r  | I2C slave 0            |
-  | 0x28    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 1            |
-  | 0x29    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 2            |
-  | 0x2A    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 3            |
-  | 0x2B    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 4            |
-  | 0x2C    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 5            |
-  | 0x2D    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 6            |
-  | 0x2E    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 7            |
-  | 0x2F    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 8            |
-  | 0x30    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 9            |
-  | 0x31    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 10           |
-  | 0x32    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 11           |
+  | 0x27    | SBIS_UPUM     |                  | IO   | w    | rstn                   |
+  | 0x28    | special       |                  | IO   | w    | i2c_speed              |
+  | 0x29    | SBIS UPUM     |                  | I2C  | w/r  | I2C slave 0            |
+  | 0x2A    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 1            |
+  | 0x2B    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 2            |
+  | 0x2C    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 3            |
+  | 0x2D    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 4            |
+  | 0x2E    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 5            |
+  | 0x2F    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 6            |
+  | 0x30    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 7            |
+  | 0x31    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 8            |
+  | 0x32    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 9            |
+  | 0x33    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 10           |
+  | 0x34    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 11           |
 
 
 # Address 0x00
@@ -78,7 +80,7 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | Reset FPGA | 0xF0 |   -   |
 
 
-# Адресаты 0x0D... 0x26
+# Адресаты 0x0D... 0x28
 Они являются регистрами, либо проводами напрямую от СБИС УПУМ.
 Все кроме ниже указанных содержат значение сигнала в младшем бите [0] поля данных.
 Для чтения данных с адресатов типа Read Only, требуется отправить любое значение по его адресу, оно не будет записано.
@@ -158,3 +160,37 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | [2]    | z-state of gpio_io_32_49 |
   | [1]    | z-state of gpio_io_16_31 |
   | [0]    | z-state of gpio_io_0_15  |
+
+
+# Address 0x28
+
+  | № бита | значение  |
+  |--------|-----------|
+  | [7:1]  |     -     |
+  | [0]    | i2c_speed |
+  
+  i2c_speed:
+  | код | расшифровка |
+  |-----|-------------|
+  | 0   | 100 kbit/s  |
+  | 1   | 400 kbit/s  |
+
+
+# Address 0x29... 0x34
+
+  Формат сообщения при записи:
+  | Structural part of message            | Bytes             |
+  |---------------------------------------|-------------------|
+  | [7:1] = I2C device address, [0] = "0" | 1                 |
+  | Length of address                     | 1                 |
+  | Length of data                        | 1                 |
+  | Address                               | Length of address | 
+  | Data                                  | Length of data    |
+  
+  Формат сообщения при чтении:
+  | Structural part of message            | Bytes             |
+  |---------------------------------------|-------------------|
+  | [7:1] = I2C device address, [0] = "1" | 1                 |
+  | Length of address                     | 1                 |
+  | Length of data                        | 1                 |
+  | Address                               | Length of address |

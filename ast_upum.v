@@ -51,11 +51,11 @@ module ast_upum (
   // I2C slaves and masters
   output funct_en_1,  // enables I2C repeaters
   output [6:0] addr,  // goes to upum, I2C address
-  inout [3:0] s_scl,
+  input [3:0] s_scl,
   inout [3:0] s_sda,
   input [3:0] s_sreset,
   output [3:0] s_sstat,
-  inout [11:0] m_scl,
+  output [11:0] m_scl,
   inout [11:0] m_sda,
   output [11:0] m_sreset,
   input [11:0] m_sstat,
@@ -117,8 +117,8 @@ wire n_rst_ext;
 wire pll_locked;
 wire n_rst = pll_locked & n_rst_ext;
 wire sclk_common;
-assign rst_n = 1'b1;
 assign clk_a = sclk_common;
+wire i2c_speed;
 
 
 
@@ -290,14 +290,14 @@ adcs (
 
 
 
-// addresses 0x0D-0x26
+// addresses 0x0D-0x27
 regs regs (
   .n_rst (n_rst),
   .clk (sys_clk),
   .master_data (master_data),
-  .valid_bus (valid_bus[38:13]),
-  .rdreq_bus (rdreq_bus[38:13]),
-  .have_msg_bus (have_msg_bus[38:13]),
+  .valid_bus (valid_bus[40:13]),
+  .rdreq_bus (rdreq_bus[40:13]),
+  .have_msg_bus (have_msg_bus[40:13]),
   .slave_data (slave_data_bus[5*8+:8]),
   .len (len_bus[5*8+:8]),
   
@@ -337,7 +337,31 @@ regs regs (
   
   .gpio_io_32_49 (gpio_io_32_49),
   .gpio_io_16_31 (gpio_io_16_31),
-  .gpio_io_0_15 (gpio_io_0_15)
+  .gpio_io_0_15 (gpio_io_0_15),
+  
+  .rstn (rst_n),
+  .i2c_speed (i2c_speed)
+);
+
+
+
+// addresses 0x28-0x33
+if_i2c_master if_i2c_master (
+  .n_rst (n_rst),
+  .clk (sys_clk),
+  
+  .i2c_speed (i2c_speed),
+  .scl_bus (m_scl),
+  .sda_bus (m_sda),
+  .sreset_bus (m_sreset),
+  .sstat_bus (m_sstat),
+  
+  .m_din (master_data),
+  .m_wrreq_bus (valid_bus[52:41]),
+  .have_msg_bus (have_msg_bus[52:41]),
+  .s_rdreq_bus (rdreq_bus[52:41]),
+  .s_dout (slave_data_bus[6*8+:8]),
+  .len (len_bus[6*8+:8])
 );
 
 

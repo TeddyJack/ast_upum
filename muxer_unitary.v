@@ -21,7 +21,7 @@ assign data_out = data_ored[NUM-1];
 // main logic
 generate for (i = 0; i < NUM; i = i + 1)
   begin: packing_anding
-  assign data_packed[i] = data_in_bus[i*8+:8];
+  assign data_packed[i] = data_in_bus[i*WIDTH+:WIDTH];
   assign data_anded[i] = data_packed[i] & {WIDTH{ena_in_bus[i]}};
   end
 endgenerate

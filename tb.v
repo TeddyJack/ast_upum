@@ -213,6 +213,18 @@ initial
   send_to_rx(8'h01);  // len
   send_to_rx(8'hF0);
   send_to_rx(8'hCC);  // crc
+  
+  send_to_rx(8'hEE);  // prefix
+  send_to_rx(8'h29);  // address of dest
+  send_to_rx(8'h07);  // len
+  send_to_rx(8'hA0);
+  send_to_rx(8'h02);
+  send_to_rx(8'h02);
+  send_to_rx(8'h01);
+  send_to_rx(8'h02);
+  send_to_rx(8'h03);
+  send_to_rx(8'h04);
+  send_to_rx(8'hCC);  // crc
   /*
   send_to_rx(8'hEE);  // prefix
   send_to_rx(8'h10);  // address of dest

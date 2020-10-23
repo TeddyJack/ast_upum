@@ -216,4 +216,11 @@ set_location_assignment PIN_240 -to s_scl[1]
 set_location_assignment PIN_153 -to clk_100
 set_global_assignment -name QIP_FILE pll_upum.qip
 set_location_assignment PIN_208 -to rst_n
+set_global_assignment -name VERILOG_FILE i2c_master_teddy.v
+set_global_assignment -name VERILOG_FILE if_i2c_master.v
+set_global_assignment -name QIP_FILE fifo_sc.qip
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp3.stp
+set_global_assignment -name SIGNALTAP_FILE output_files/stp3.stp
+set_global_assignment -name SLD_FILE "D:/Projects/Quartus 13/ast_upum/output_files/stp3_auto_stripped.stp"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
