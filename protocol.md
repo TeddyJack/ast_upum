@@ -33,43 +33,43 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 0x0E    | SBIS_UPUM     |                  | IO   | r    | cmp_o                  |
   | 0x0F    | Mux           | 6-13             | IO   | r    | gpio_o_0-127           |
   | 0x10    | Mux           | 14,15            | IO   | r    | gpio_o_128-159         |
-  | 0x11    | Pot (5293)    | Power: 1,2,17,18 | IO   | w    | rst_power              |
-  | 0x12    | Pot (5293)    | Power: 17        | IO   | w    | off_vdd                |
-  | 0x13    | Pot (5293)    | Power: 1         | IO   | w    | off_dvdd               |
-  | 0x14    | Pot (5293)    | Power: 2         | IO   | w    | off_avdd               |
-  | 0x15    | Pot (5293)    | Power: 18        | IO   | w    | off_limit_input        |
-  | 0x16    | Pot (5293)    | 79-82            | IO   | w    | rst_cmp_oa             |
-  | 0x17    | I2C repeater  | 50-65            | IO   | w    | funct_en_1             |
-  | 0x18    | SBIS UPUM     |                  | IO   | w    | addr                   |
-  | 0x19    | Flash mem     | 45               | IO   | w    | nce_fl1                |
-  | 0x1A    | Flash mem     | 46               | IO   | w    | nce_fl2                |
-  | 0x1B    | Level transl  | 40-44            | IO   | w    | en_gpio_fl1            |
-  | 0x1C    | SBIS UPUM     |                  | IO   | w    | cpu_cfg                |
-  | 0x1D    | SBIS UPUM     |                  | IO   | w    | clk_gen_control        |
-  | 0x1E    | SBIS UPUM     |                  | IO   | w    | csa                    |
-  | 0x1F    | Level transl  | 26-28,37,38,     | IO   | w    | funct_en               |
+  | 0x11    | Mux/demux     | 31-33            | IO   | w    | gpio_io_0-49           |
+  | 0x12    | Pot (5293)    | Power: 1,2,17,18 | IO   | w    | rst_power              |
+  | 0x13    | Pot (5293)    | Power: 17        | IO   | w    | off_vdd                |
+  | 0x14    | Pot (5293)    | Power: 1         | IO   | w    | off_dvdd               |
+  | 0x15    | Pot (5293)    | Power: 2         | IO   | w    | off_avdd               |
+  | 0x16    | Pot (5293)    | Power: 18        | IO   | w    | off_limit_input        |
+  | 0x17    | Pot (5293)    | 79-82            | IO   | w    | rst_cmp_oa             |
+  | 0x18    | I2C repeater  | 50-65            | IO   | w    | funct_en_1             |
+  | 0x19    | SBIS UPUM     |                  | IO   | w    | addr                   |
+  | 0x1A    | Flash mem     | 45               | IO   | w    | nce_fl1                |
+  | 0x1B    | Flash mem     | 46               | IO   | w    | nce_fl2                |
+  | 0x1C    | Level transl  | 40-44            | IO   | w    | en_gpio_fl1            |
+  | 0x1D    | SBIS UPUM     |                  | IO   | w    | cpu_cfg                |
+  | 0x1E    | SBIS UPUM     |                  | IO   | w    | flash_gpio_dir         |
+  |         |               |                  |      |      | (ex. clk_gen_control)  |
+  | 0x1F    | SBIS UPUM     |                  | IO   | w    | gpio_io_ena (ex. csa)  |
+  | 0x20    | Level transl  | 26-28,37,38,     | IO   | w    | funct_en               |
   |         |               | 47-49,66-69      |      |      |                        |
-  | 0x20    | Mux/demux     | 6-15,31-33       | IO   | w    | a_gpio                 |
-  | 0x21    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_0             |
-  | 0x22    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v5_1         |
-  | 0x23    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v0_1         |
-  | 0x24    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
-  | 0x25    | Mux/demux     | 31-33            | IO   | w/r  | gpio_io_0-49           |
-  | 0x26    | special       |                  | IO   | w    | gpio_z_state           |
-  | 0x27    | SBIS_UPUM     |                  | IO   | w    | rstn                   |
-  | 0x28    | special       |                  | IO   | w    | i2c_speed              |
-  | 0x29    | SBIS UPUM     |                  | I2C  | w/r  | I2C slave 0            |
-  | 0x2A    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 1            |
-  | 0x2B    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 2            |
-  | 0x2C    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 3            |
-  | 0x2D    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 4            |
-  | 0x2E    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 5            |
-  | 0x2F    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 6            |
-  | 0x30    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 7            |
-  | 0x31    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 8            |
-  | 0x32    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 9            |
-  | 0x33    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 10           |
-  | 0x34    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 11           |
+  | 0x21    | Mux/demux     | 6-15,31-33       | IO   | w    | a_gpio                 |
+  | 0x22    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_0             |
+  | 0x23    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v5_1         |
+  | 0x24    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_5v0_1         |
+  | 0x25    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
+  | 0x26    | SBIS_UPUM     |                  | IO   | w    | rstn                   |
+  | 0x27    | special       |                  | IO   | w    | i2c_speed              |
+  | 0x28    | SBIS UPUM     |                  | I2C  | w/r  | I2C slave 0            |
+  | 0x29    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 1            |
+  | 0x2A    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 2            |
+  | 0x2B    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 3            |
+  | 0x2C    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 4            |
+  | 0x2D    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 5            |
+  | 0x2E    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 6            |
+  | 0x2F    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 7            |
+  | 0x30    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 8            |
+  | 0x31    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 9            |
+  | 0x32    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 10           |
+  | 0x33    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 11           |
 
 
 # Address 0x00
@@ -80,7 +80,7 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | Reset FPGA | 0xF0 |   -   |
 
 
-# Адресаты 0x0D... 0x28
+# Адресаты 0x0D... 0x27
 Они являются регистрами, либо проводами напрямую от СБИС УПУМ.
 Все кроме ниже указанных содержат значение сигнала в младшем бите [0] поля данных.
 Для чтения данных с адресатов типа Read Only, требуется отправить любое значение по его адресу, оно не будет записано.
@@ -118,31 +118,7 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | [0]    | gpio_o_128_143 |
 
 
-# Address 0x18
-
-  | № бита | значение |
-  |--------|----------|
-  | [7]    |    -     |
-  | [6:0]  | addr     |
-
-
-# Address 0x1C
-
-  | № бита | значение |
-  |--------|----------|
-  | [7:2]  |    -     |
-  | [1:0]  | cpu_cfg  |
-
-
-# Address 0x20
-
-  | № бита | значение |
-  |--------|----------|
-  | [7:4]  |    -     |
-  | [3:0]  | a_gpio   |
-
-
-# Address 0x25
+# Address 0x11
 
   | № бита | значение       |
   |--------|----------------|
@@ -152,17 +128,31 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | [0]    | gpio_io_0_15   |
 
 
-# Address 0x26
+# Address 0x19
 
-  | № бита | значение                 |
-  |--------|--------------------------|
-  | [7:3]  |            -             |
-  | [2]    | z-state of gpio_io_32_49 |
-  | [1]    | z-state of gpio_io_16_31 |
-  | [0]    | z-state of gpio_io_0_15  |
+  | № бита | значение |
+  |--------|----------|
+  | [7]    |    -     |
+  | [6:0]  | addr     |
 
 
-# Address 0x28
+# Address 0x1E
+
+  | № бита | значение |
+  |--------|----------|
+  | [7:2]  |    -     |
+  | [1:0]  | cpu_cfg  |
+
+
+# Address 0x21
+
+  | № бита | значение |
+  |--------|----------|
+  | [7:4]  |    -     |
+  | [3:0]  | a_gpio   |
+
+
+# Address 0x27
 
   | № бита | значение  |
   |--------|-----------|
@@ -176,7 +166,7 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 1   | 400 kbit/s  |
 
 
-# Address 0x29... 0x34
+# Address 0x28... 0x33
 
   Формат сообщения при записи:
   | Structural part of message            | Bytes             |

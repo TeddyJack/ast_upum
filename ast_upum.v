@@ -75,9 +75,9 @@ module ast_upum (
   
   output funct_en,  // enables func control, disables load switches
   output [3:0] a_gpio,  // address of multiplexer for gpio
-  inout gpio_io_32_49,
-  inout gpio_io_16_31,
-  inout gpio_io_0_15,
+  output gpio_io_32_49,
+  output gpio_io_16_31,
+  output gpio_io_0_15,
   input gpio_o_144_159,
   input gpio_o_128_143,
   input gpio_o_112_127,
@@ -295,8 +295,8 @@ regs regs (
   .n_rst (n_rst),
   .clk (sys_clk),
   .master_data (master_data),
-  .valid_bus (valid_bus[40:13]),
-  .rdreq_bus (rdreq_bus[40:13]),
+  .valid_bus (valid_bus[39:13]),
+  .rdreq_bus (rdreq_bus[39:13]),
   .have_msg_bus (have_msg_bus[40:13]),
   .slave_data (slave_data_bus[5*8+:8]),
   .len (len_bus[5*8+:8]),
@@ -313,6 +313,10 @@ regs regs (
   .gpio_o_32_47 (gpio_o_32_47),
   .gpio_o_16_31 (gpio_o_16_31),
   .gpio_o_0_15 (gpio_o_0_15),
+  
+  .gpio_io_32_49 (gpio_io_32_49),
+  .gpio_io_16_31 (gpio_io_16_31),
+  .gpio_io_0_15 (gpio_io_0_15),
   
   .rst_power (rst_power),
   .off_vdd (off_vdd),
@@ -335,10 +339,6 @@ regs regs (
   .load_pdr_5v0_1 (load_pdr_5v0_1),
   .load_pdr_4v5_1 (load_pdr_4v5_1),
   
-  .gpio_io_32_49 (gpio_io_32_49),
-  .gpio_io_16_31 (gpio_io_16_31),
-  .gpio_io_0_15 (gpio_io_0_15),
-  
   .rstn (rst_n),
   .i2c_speed (i2c_speed)
 );
@@ -357,9 +357,9 @@ if_i2c_master if_i2c_master (
   .sstat_bus (m_sstat),
   
   .m_din (master_data),
-  .m_wrreq_bus (valid_bus[52:41]),
-  .have_msg_bus (have_msg_bus[52:41]),
-  .s_rdreq_bus (rdreq_bus[52:41]),
+  .m_wrreq_bus (valid_bus[51:40]),
+  .have_msg_bus (have_msg_bus[51:40]),
+  .s_rdreq_bus (rdreq_bus[51:40]),
   .s_dout (slave_data_bus[6*8+:8]),
   .len (len_bus[6*8+:8])
 );
