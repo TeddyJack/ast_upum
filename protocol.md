@@ -17,6 +17,7 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | Address | Type          | D                | IF   | w/r  | Descr                  |
   |---------|---------------|------------------|------|------|------------------------|
   | 0x00    | service       |                  | IO   |      | keep alive, reset      |
+  |=========|===============|==================|======|======|========================|
   | 0x01    | Pot (5293)    | Power: 17        | SPI  | w    | vdd                    |
   | 0x02    | Pot (5293)    | Power: 1         | SPI  | w    | dvdd                   |
   | 0x03    | Pot (5293)    | Power: 2         | SPI  | w    | avdd                   |
@@ -29,10 +30,12 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 0x0A    | ADC (7328)    | 29               | SPI  | w/r  | gpio_o_0-127           |
   | 0x0B    | ADC (7328)    | 30               | SPI  | w/r  | gpio_o_128-159         |
   | 0x0C    | ADC (7328)    | 39               | SPI  | w/r  | gpio_io_0-49           |
+  |=========|===============|==================|======|======|========================|
   | 0x0D    | Logic "or"    | 75               | IO   | r    | sbis_functcontrol_stop |
   | 0x0E    | SBIS_UPUM     |                  | IO   | r    | cmp_o                  |
   | 0x0F    | Mux           | 6-13             | IO   | r    | gpio_o_0-127           |
   | 0x10    | Mux           | 14,15            | IO   | r    | gpio_o_128-159         |
+  |=========|===============|==================|======|======|========================|
   | 0x11    | Mux/demux     | 31-33            | IO   | w    | gpio_io_0-49           |
   | 0x12    | Pot (5293)    | Power: 1,2,17,18 | IO   | w    | rst_power              |
   | 0x13    | Pot (5293)    | Power: 17        | IO   | w    | off_vdd                |
@@ -58,18 +61,24 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 0x25    | Switch        | 16-25,34-36      | IO   | w    | load_pdr_4v5_1         |
   | 0x26    | SBIS_UPUM     |                  | IO   | w    | rstn                   |
   | 0x27    | special       |                  | IO   | w    | i2c_speed              |
+  |=========|===============|==================|======|======|========================|
   | 0x28    | SBIS UPUM     |                  | I2C  | w/r  | I2C slave 0            |
   | 0x29    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 1            |
   | 0x2A    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 2            |
   | 0x2B    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 3            |
-  | 0x2C    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 4            |
-  | 0x2D    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 5            |
-  | 0x2E    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 6            |
-  | 0x2F    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 7            |
-  | 0x30    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 8            |
-  | 0x31    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 9            |
-  | 0x32    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 10           |
-  | 0x33    | SBIS_UPUM     |                  | I2C  | w/r  | I2C slave 11           |
+  |=========|===============|==================|======|======|========================|
+  | 0x2C    | SBIS_UPUM     |                  | I2C  | r    | I2C master 0           |
+  | 0x2D    | SBIS_UPUM     |                  | I2C  | r    | I2C master 1           |
+  | 0x2E    | SBIS_UPUM     |                  | I2C  | r    | I2C master 2           |
+  | 0x2F    | SBIS_UPUM     |                  | I2C  | r    | I2C master 3           |
+  | 0x30    | SBIS_UPUM     |                  | I2C  | r    | I2C master 4           |
+  | 0x31    | SBIS_UPUM     |                  | I2C  | r    | I2C master 5           |
+  | 0x32    | SBIS_UPUM     |                  | I2C  | r    | I2C master 6           |
+  | 0x33    | SBIS_UPUM     |                  | I2C  | r    | I2C master 7           |
+  | 0x34    | SBIS UPUM     |                  | I2C  | r    | I2C master 8           |
+  | 0x35    | SBIS_UPUM     |                  | I2C  | r    | I2C master 9           |
+  | 0x36    | SBIS_UPUM     |                  | I2C  | r    | I2C master 10          |
+  | 0x37    | SBIS_UPUM     |                  | I2C  | r    | I2C master 11          |
 
 
 # Address 0x00
@@ -167,7 +176,7 @@ Checksum - сумма по модулю 256 всех байт в сообщен�
   | 1   | 400 kbit/s  |
 
 
-# Address 0x28... 0x33
+# Address 0x28... 0x2B
 
   Формат сообщения при записи:
   

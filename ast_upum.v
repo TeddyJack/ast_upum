@@ -51,14 +51,14 @@ module ast_upum (
   // I2C slaves and masters
   output funct_en_1,  // enables I2C repeaters
   output [6:0] addr,  // goes to upum, I2C address
-  input [3:0] s_scl,
+  inout [3:0] s_scl,
   inout [3:0] s_sda,
-  input [3:0] s_sreset,
-  output [3:0] s_sstat,
-  output [11:0] m_scl,
+  output [3:0] s_sreset,
+  input [3:0] s_sstat,
+  input [11:0] m_scl,
   inout [11:0] m_sda,
-  output [11:0] m_sreset,
-  input [11:0] m_sstat,
+  input [11:0] m_sreset,
+  output [11:0] m_sstat,
   // control flash memory
   output nce_fl1,
   output nce_fl2,
@@ -345,24 +345,44 @@ regs regs (
 
 
 
-// addresses 0x28-0x33
+// addresses 0x28-0x2B
 if_i2c_master if_i2c_master (
   .n_rst (n_rst),
   .clk (sys_clk),
   
   .i2c_speed (i2c_speed),
+  .scl_bus (s_scl),
+  .sda_bus (s_sda),
+  .sreset_bus (s_sreset),
+  .sstat_bus (s_sstat),
+  
+  .m_din (master_data),
+  .m_wrreq_bus (valid_bus[43:40]),
+  .have_msg_bus (have_msg_bus[43:40]),
+  .s_rdreq_bus (rdreq_bus[43:40]),
+  .s_dout (slave_data_bus[6*8+:8]),
+  .len (len_bus[6*8+:8])
+);
+
+
+
+// addresses 0x34-0x37
+if_i2c_slave if_i2c_slave (
+  .n_rst (n_rst),
+  .clk (sys_clk),
+  .my_dev_address (addr),
+  
   .scl_bus (m_scl),
   .sda_bus (m_sda),
   .sreset_bus (m_sreset),
   .sstat_bus (m_sstat),
-  
-  .m_din (master_data),
-  .m_wrreq_bus (valid_bus[51:40]),
-  .have_msg_bus (have_msg_bus[51:40]),
-  .s_rdreq_bus (rdreq_bus[51:40]),
-  .s_dout (slave_data_bus[6*8+:8]),
-  .len (len_bus[6*8+:8])
+
+  .have_msg_bus (have_msg_bus[55:44]),
+  .s_rdreq_bus (rdreq_bus[55:44]),
+  .s_dout (slave_data_bus[7*8+:8]),
+  .len (len_bus[7*8+:8])
 );
+
 
 
 

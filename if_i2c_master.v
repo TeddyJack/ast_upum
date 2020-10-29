@@ -1,11 +1,11 @@
 module if_i2c_master #(
-  parameter N = 12
+  parameter N = 4
 )(
   input n_rst,
   input clk,
   
   input i2c_speed,
-  output [N-1:0] scl_bus,
+  inout [N-1:0] scl_bus,
   inout [N-1:0] sda_bus,
   output [N-1:0] sreset_bus,
   input [N-1:0] sstat_bus,
@@ -38,35 +38,37 @@ wire s_rdreq = |s_rdreq_bus;
 reg [1*N-1:0] select_unitary;
 assign have_msg_bus = ~{N{s_empty}} & select_unitary;   // demux of (~s_empty)
 
-wire scl;
-assign scl_bus = {N{scl}} | ~select_unitary; // demux of scl, but active "0"
-wire sda_o;
-wire sda_oen;
+
+wire sda_i, sda_o, sda_oen;
 wire [N-1:0] sda_o_bus = {N{sda_o}} | ~select_unitary;    // demux of sda_o, but active "0"
 wire [N-1:0] sda_oen_bus = {N{sda_oen}} & select_unitary; // demux of sda_oen
 wire [N-1:0] sda_i_bus;
+wire scl_i, scl_o, scl_oen;
+wire [N-1:0] scl_o_bus = {N{scl_o}} | ~select_unitary;    // demux of scl_o, but active "0"
+wire [N-1:0] scl_oen_bus = {N{scl_oen}} & select_unitary; // demux of scl_oen
+wire [N-1:0] scl_i_bus;
+
 genvar i;
-generate for (i = 0; i < 12; i = i + 1)
+generate for (i = 0; i < N; i = i + 1)
   begin: wow
-  assign sda_bus[i] = sda_oen_bus[i] ? sda_o_bus[i] : 1'bz;
+  assign sda_bus[i] = (sda_oen_bus[i] & !sda_o_bus[i]) ? 1'b0 : 1'bz;
+  assign scl_bus[i] = (scl_oen_bus[i] & !scl_o_bus[i]) ? 1'b0 : 1'bz;
   assign sda_i_bus[i] = sda_bus[i];
+  assign scl_i_bus[i] = scl_bus[i];
   end
 endgenerate
-//assign sda_bus = sda_oen_bus ? sda_o_bus : {N{1'bz}}; // WRONG
 
-wire sda_i;                      // mux of sda_i
-
-muxer_unitary #(
-  .WIDTH (1),
-  .NUM (N)
-)
-muxer_unitary (
+muxer_unitary #(.WIDTH (1), .NUM (N)) muxer_sda (
   .data_in_bus (sda_i_bus),
   .ena_in_bus (select_unitary),
   .data_out (sda_i)
 );
 
-
+muxer_unitary #(.WIDTH (1), .NUM (N)) muxer_scl (
+  .data_in_bus (scl_i_bus),
+  .ena_in_bus (select_unitary),
+  .data_out (scl_i)
+);
 
 
 
@@ -122,7 +124,7 @@ fifo_sc fifo_slave (
 
 
 i2c_master_teddy i2c_master_teddy (
-  .CLK_DIV (i2c_speed ? 15'd222 : 15'd888),  // CLK_DIV = 8 * F_CLK / 9 / BAUDRATE
+  .CLK_DIV (i2c_speed ? 16'd222 : 16'd888),  // CLK_DIV = 8 * F_CLK / 9 / BAUDRATE
   .clk (clk),
   .n_rst (n_rst),
   .start (start),
@@ -136,7 +138,9 @@ i2c_master_teddy i2c_master_teddy (
   .sda_i (sda_i),
   .sda_o (sda_o),
   .sda_oen (sda_oen),
-  .scl_o (scl),
+  .scl_i (scl_i),
+  .scl_o (scl_o),
+  .scl_oen (scl_oen),
   .out_data (s_din),
   .out_ena (s_wrreq)
 );
