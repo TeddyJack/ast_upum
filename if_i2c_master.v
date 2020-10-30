@@ -1,3 +1,5 @@
+`include "defines.v"
+
 module if_i2c_master #(
   parameter N = 4
 )(
@@ -19,7 +21,7 @@ module if_i2c_master #(
   output [7:0] len
 );
 
-assign sreset_bus = m_wrreq_bus;  // DON'T FORGET TO REMOVE
+assign sreset_bus = {N{!ready}} & select_unitary;  // DON'T FORGET TO REMOVE
 
 
 wire        m_empty;
@@ -40,31 +42,27 @@ assign have_msg_bus = ~{N{s_empty}} & select_unitary;   // demux of (~s_empty)
 
 
 wire sda_i, sda_o, sda_oen;
-wire [N-1:0] sda_o_bus = {N{sda_o}} | ~select_unitary;    // demux of sda_o, but active "0"
-wire [N-1:0] sda_oen_bus = {N{sda_oen}} & select_unitary; // demux of sda_oen
 wire [N-1:0] sda_i_bus;
 wire scl_i, scl_o, scl_oen;
-wire [N-1:0] scl_o_bus = {N{scl_o}} | ~select_unitary;    // demux of scl_o, but active "0"
-wire [N-1:0] scl_oen_bus = {N{scl_oen}} & select_unitary; // demux of scl_oen
 wire [N-1:0] scl_i_bus;
 
 genvar i;
 generate for (i = 0; i < N; i = i + 1)
   begin: wow
-  assign sda_bus[i] = (sda_oen_bus[i] & !sda_o_bus[i]) ? 1'b0 : 1'bz;
-  assign scl_bus[i] = (scl_oen_bus[i] & !scl_o_bus[i]) ? 1'b0 : 1'bz;
+  assign sda_bus[i] = (select_unitary[i] & sda_oen & !sda_o) ? 1'b0 : 1'bz;
+  assign scl_bus[i] = (select_unitary[i] & scl_oen & !scl_o) ? 1'b0 : 1'bz;
   assign sda_i_bus[i] = sda_bus[i];
   assign scl_i_bus[i] = scl_bus[i];
   end
 endgenerate
 
-muxer_unitary #(.WIDTH (1), .NUM (N)) muxer_sda (
+muxer_unitary_zero #(.WIDTH (1), .NUM (N)) muxer_sda (
   .data_in_bus (sda_i_bus),
   .ena_in_bus (select_unitary),
   .data_out (sda_i)
 );
 
-muxer_unitary #(.WIDTH (1), .NUM (N)) muxer_scl (
+muxer_unitary_zero #(.WIDTH (1), .NUM (N)) muxer_scl (
   .data_in_bus (scl_i_bus),
   .ena_in_bus (select_unitary),
   .data_out (scl_i)
@@ -124,7 +122,7 @@ fifo_sc fifo_slave (
 
 
 i2c_master_teddy i2c_master_teddy (
-  .CLK_DIV (i2c_speed ? 16'd222 : 16'd888),  // CLK_DIV = 8 * F_CLK / 9 / BAUDRATE
+  .CLK_DIV (i2c_speed ? `I2C_DIV_400 : `I2C_DIV_100),
   .clk (clk),
   .n_rst (n_rst),
   .start (start),

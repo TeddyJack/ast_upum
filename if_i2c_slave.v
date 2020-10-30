@@ -16,7 +16,7 @@ module if_i2c_slave #(
   output [7:0] len
 );
 
-assign sstat_bus = 0;   // assign something
+assign sstat_bus = {N{!ready}} & select_unitary;    // DON'T FORGET TO REMOVE
 
 
 wire [7:0]  s_din;
@@ -30,15 +30,13 @@ assign len = {2'b0, s_used};
 reg [1*N-1:0] select_unitary;
 assign have_msg_bus = ~{N{s_empty}} & select_unitary;   // demux of (~s_empty)
 
-wire sda_o;
-wire sda_oen;
-wire [N-1:0] sda_o_bus = {N{sda_o}} | ~select_unitary;    // demux of sda_o, but active "0"
-wire [N-1:0] sda_oen_bus = {N{sda_oen}} & select_unitary; // demux of sda_oen
+wire sda_o, sda_oen;
 wire [N-1:0] sda_i_bus;
+
 genvar i;
 generate for (i = 0; i < N; i = i + 1)
   begin: wow
-  assign sda_bus[i] = (sda_oen_bus[i] & !sda_o_bus[i]) ? 1'b0 : 1'bz;
+  assign sda_bus[i] = (select_unitary[i] & sda_oen & !sda_o) ? 1'b0 : 1'bz;
   assign sda_i_bus[i] = sda_bus[i];
   end
 endgenerate
@@ -47,7 +45,7 @@ endgenerate
 wire scl;                      // mux of scl_bus
 wire sda_i;                    // mux of sda_i
 
-muxer_unitary #(
+muxer_unitary_zero #(
   .WIDTH (1),
   .NUM (N)
 )
@@ -57,7 +55,7 @@ mux_scl (
   .data_out (scl)
 );
 
-muxer_unitary #(
+muxer_unitary_zero #(
   .WIDTH (1),
   .NUM (N)
 )

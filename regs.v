@@ -1,5 +1,5 @@
 module regs #(
-  parameter N = 4+21+2 // inputs + outputs + special
+  parameter N = 3+22+2 // inputs + outputs + special
 )(
   input                n_rst,
   input                clk,
@@ -12,7 +12,6 @@ module regs #(
   output     [7:0] slave_data,
   // inputs
   input       sbis_functcontrol_stop,
-  input [3:0] cmp_o,
   input       gpio_o_144_159,
   input       gpio_o_128_143,
   input       gpio_o_112_127,
@@ -48,9 +47,8 @@ module regs #(
   output reg       load_pdr_5v0_1,
   output reg       load_pdr_4v5_1,
   output reg       rstn,
-  output reg       i2c_speed
-  // special are not ports
-  
+  output reg       i2c_speed,
+  output reg       clk_enable
 );
 
 wire [N*8-1:0] slave_data_bus;
@@ -65,38 +63,38 @@ assign gpio_io_0_15 = gpio_io_0_49[0];
 
 
 // inputs
-assign slave_data_bus[0*8+:8] =  {7'b0, sbis_functcontrol_stop};    // 0x0D
-assign slave_data_bus[1*8+:8] =  {4'b0, cmp_o};
-assign slave_data_bus[2*8+:8] =  {gpio_o_112_127, gpio_o_96_111,
+assign slave_data_bus[00*8+:8] =  {7'b0, sbis_functcontrol_stop};    // 0x0D
+assign slave_data_bus[01*8+:8] =  {gpio_o_112_127, gpio_o_96_111,
                                   gpio_o_80_95, gpio_o_64_79,
                                   gpio_o_48_63, gpio_o_32_47,
                                   gpio_o_16_31, gpio_o_0_15};
-assign slave_data_bus[3*8+:8] =  {6'b0, gpio_o_144_159, gpio_o_128_143};
+assign slave_data_bus[02*8+:8] =  {6'b0, gpio_o_144_159, gpio_o_128_143};
 // outputs  
-assign slave_data_bus[4*8+:8] =  {5'b0, gpio_io_32_49, gpio_io_16_31, gpio_io_0_15};
-assign slave_data_bus[5*8+:8] =  {7'b0, rst_power};
-assign slave_data_bus[6*8+:8] =  {7'b0, off_vdd};
-assign slave_data_bus[7*8+:8] =  {7'b0, off_dvdd};
-assign slave_data_bus[8*8+:8] =  {7'b0, off_avdd};
-assign slave_data_bus[9*8+:8] =  {7'b0, off_limit_input};
-assign slave_data_bus[10*8+:8] = {7'b0, rst_cmp_oa};
-assign slave_data_bus[11*8+:8] = {7'b0, funct_en_1};
-assign slave_data_bus[12*8+:8] = {1'b0, addr};
-assign slave_data_bus[13*8+:8] = {7'b0, nce_fl1};
-assign slave_data_bus[14*8+:8] = {7'b0, nce_fl2};
-assign slave_data_bus[15*8+:8] = {7'b0, en_gpio_fl1};
-assign slave_data_bus[16*8+:8] = {6'b0, cpu_cfg};
-assign slave_data_bus[17*8+:8] = {7'b0, clk_gen_control};
-assign slave_data_bus[18*8+:8] = {7'b0, csa};
-assign slave_data_bus[19*8+:8] = {7'b0, funct_en};
-assign slave_data_bus[20*8+:8] = {4'b0, a_gpio};
-assign slave_data_bus[21*8+:8] = {7'b0, load_pdr_0};
-assign slave_data_bus[22*8+:8] = {7'b0, load_pdr_5v5_1};
-assign slave_data_bus[23*8+:8] = {7'b0, load_pdr_5v0_1};
-assign slave_data_bus[24*8+:8] = {7'b0, load_pdr_4v5_1};
+assign slave_data_bus[03*8+:8] =  {5'b0, gpio_io_32_49, gpio_io_16_31, gpio_io_0_15};
+assign slave_data_bus[04*8+:8] =  {7'b0, rst_power};
+assign slave_data_bus[05*8+:8] =  {7'b0, off_vdd};
+assign slave_data_bus[06*8+:8] =  {7'b0, off_dvdd};
+assign slave_data_bus[07*8+:8] =  {7'b0, off_avdd};
+assign slave_data_bus[08*8+:8] =  {7'b0, off_limit_input};
+assign slave_data_bus[09*8+:8] = {7'b0, rst_cmp_oa};
+assign slave_data_bus[10*8+:8] = {7'b0, funct_en_1};
+assign slave_data_bus[11*8+:8] = {1'b0, addr};
+assign slave_data_bus[12*8+:8] = {7'b0, nce_fl1};
+assign slave_data_bus[13*8+:8] = {7'b0, nce_fl2};
+assign slave_data_bus[14*8+:8] = {7'b0, en_gpio_fl1};
+assign slave_data_bus[15*8+:8] = {6'b0, cpu_cfg};
+assign slave_data_bus[16*8+:8] = {7'b0, clk_gen_control};
+assign slave_data_bus[17*8+:8] = {7'b0, csa};
+assign slave_data_bus[18*8+:8] = {7'b0, funct_en};
+assign slave_data_bus[19*8+:8] = {4'b0, a_gpio};
+assign slave_data_bus[20*8+:8] = {7'b0, load_pdr_0};
+assign slave_data_bus[21*8+:8] = {7'b0, load_pdr_5v5_1};
+assign slave_data_bus[22*8+:8] = {7'b0, load_pdr_5v0_1};
+assign slave_data_bus[23*8+:8] = {7'b0, load_pdr_4v5_1};
+assign slave_data_bus[24*8+:8] = {7'b0, rstn};
 // special
-assign slave_data_bus[25*8+:8] = {7'b0, rstn};
-assign slave_data_bus[26*8+:8] = {7'b0, i2c_speed};
+assign slave_data_bus[25*8+:8] = {7'b0, i2c_speed};
+assign slave_data_bus[26*8+:8] = {7'b0, clk_enable};
 
 
 
@@ -112,7 +110,7 @@ always @ (posedge clk or negedge n_rst)
     off_limit_input <= 1'b1;
     rst_cmp_oa      <= 1'b1;
     funct_en_1      <= 1'b0;
-    addr            <= 7'h7F;
+    addr            <= 7'h4B;
     nce_fl1         <= 1'b0;
     nce_fl2         <= 1'b0;
     en_gpio_fl1     <= 1'b0;
@@ -127,33 +125,35 @@ always @ (posedge clk or negedge n_rst)
     load_pdr_4v5_1  <= 1'b0;
     rstn            <= 1'b0;
     i2c_speed       <= 1'b1;
+    clk_enable      <= 1'b0;
     end
   else
     begin
-    // valid_bus[0]... [3] are missing because they are read only
-    if (valid_bus[4])   gpio_io_0_49    <= master_data[2:0];
-    if (valid_bus[5])   rst_power       <= master_data[0];
-    if (valid_bus[6])   off_vdd         <= master_data[0];
-    if (valid_bus[7])   off_dvdd        <= master_data[0];
-    if (valid_bus[8])   off_avdd        <= master_data[0];
-    if (valid_bus[9])   off_limit_input <= master_data[0];
-    if (valid_bus[10])  rst_cmp_oa      <= master_data[0];
-    if (valid_bus[11])  funct_en_1      <= master_data[0];
-    if (valid_bus[12])  addr            <= master_data[6:0];
-    if (valid_bus[13])  nce_fl1         <= master_data[0];
-    if (valid_bus[14])  nce_fl2         <= master_data[0];
-    if (valid_bus[15])  en_gpio_fl1     <= master_data[0];
-    if (valid_bus[16])  cpu_cfg         <= master_data[1:0];
-    if (valid_bus[17])  clk_gen_control <= master_data[0];
-    if (valid_bus[18])  csa             <= master_data[0];
-    if (valid_bus[19])  funct_en        <= master_data[0];
-    if (valid_bus[20])  a_gpio          <= master_data[3:0];
-    if (valid_bus[21])  load_pdr_0      <= master_data[0];
-    if (valid_bus[22])  load_pdr_5v5_1  <= master_data[0];
-    if (valid_bus[23])  load_pdr_5v0_1  <= master_data[0];
-    if (valid_bus[24])  load_pdr_4v5_1  <= master_data[0];
-    if (valid_bus[25])  rstn            <= master_data[0];
-    if (valid_bus[26])  i2c_speed       <= master_data[0];
+    // valid_bus[0]... [2] are missing because they are read only
+    if (valid_bus[3])   gpio_io_0_49    <= master_data[2:0];
+    if (valid_bus[4])   rst_power       <= master_data[0];
+    if (valid_bus[5])   off_vdd         <= master_data[0];
+    if (valid_bus[6])   off_dvdd        <= master_data[0];
+    if (valid_bus[7])   off_avdd        <= master_data[0];
+    if (valid_bus[8])   off_limit_input <= master_data[0];
+    if (valid_bus[9])  rst_cmp_oa      <= master_data[0];
+    if (valid_bus[10])  funct_en_1      <= master_data[0];
+    if (valid_bus[11])  addr            <= master_data[6:0];
+    if (valid_bus[12])  nce_fl1         <= master_data[0];
+    if (valid_bus[13])  nce_fl2         <= master_data[0];
+    if (valid_bus[14])  en_gpio_fl1     <= master_data[0];
+    if (valid_bus[15])  cpu_cfg         <= master_data[1:0];
+    if (valid_bus[16])  clk_gen_control <= master_data[0];
+    if (valid_bus[17])  csa             <= master_data[0];
+    if (valid_bus[18])  funct_en        <= master_data[0];
+    if (valid_bus[19])  a_gpio          <= master_data[3:0];
+    if (valid_bus[20])  load_pdr_0      <= master_data[0];
+    if (valid_bus[21])  load_pdr_5v5_1  <= master_data[0];
+    if (valid_bus[22])  load_pdr_5v0_1  <= master_data[0];
+    if (valid_bus[23])  load_pdr_4v5_1  <= master_data[0];
+    if (valid_bus[24])  rstn            <= master_data[0];
+    if (valid_bus[25])  i2c_speed       <= master_data[0];
+    if (valid_bus[26])  clk_enable      <= master_data[0];
     end
 
 
