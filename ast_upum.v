@@ -55,7 +55,7 @@ module ast_upum (
   inout [3:0] s_sda,
   output [3:0] s_sreset,
   input [3:0] s_sstat,
-  input [11:0] m_scl,
+  inout [11:0] m_scl,
   inout [11:0] m_sda,
   input [11:0] m_sreset,
   output [11:0] m_sstat,
@@ -369,16 +369,34 @@ if_i2c_master if_i2c_master (
 
 
 // addresses 0x34-0x37
-if_i2c_slave if_i2c_slave (
+//if_i2c_slave if_i2c_slave (
+//  .n_rst (n_rst),
+//  .clk (sys_clk),
+//  .my_dev_address (addr),
+//  
+//  .scl_bus ({m_scl[11:4], s_scl}/*m_scl*/),
+//  .sda_bus ({m_sda[11:4], s_sda}/*m_sda*/),
+//  .sreset_bus (m_sreset),
+//  .sstat_bus (m_sstat),
+//
+//  .have_msg_bus (have_msg_bus[55:44]),
+//  .s_rdreq_bus (rdreq_bus[55:44]),
+//  .s_dout (slave_data_bus[7*8+:8]),
+//  .len (len_bus[7*8+:8])
+//);
+
+if_i2c_fake_master if_i2c_fake_master (
   .n_rst (n_rst),
   .clk (sys_clk),
-  .my_dev_address (addr),
   
-  .scl_bus ({m_scl[11:4], s_scl}/*m_scl*/),
-  .sda_bus ({m_sda[11:4], s_sda}/*m_sda*/),
+  .i2c_speed (i2c_speed),
+  .scl_bus (m_scl),
+  .sda_bus (m_sda),
   .sreset_bus (m_sreset),
   .sstat_bus (m_sstat),
-
+  
+  .m_din (master_data),
+  .m_wrreq_bus (valid_bus[55:44]),
   .have_msg_bus (have_msg_bus[55:44]),
   .s_rdreq_bus (rdreq_bus[55:44]),
   .s_dout (slave_data_bus[7*8+:8]),
