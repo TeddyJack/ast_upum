@@ -96,6 +96,7 @@ module ast_upum (
   // debug outputs
   //output [7:0] my_tx_data,
   //output my_tx_valid
+  //output reg stp_clk
 );
 
 localparam PRESCALE = `SYS_CLK * 1000000 / (`BAUDRATE * 8);	// = fclk / (baud * 8)
@@ -369,41 +370,61 @@ if_i2c_master if_i2c_master (
 
 
 // addresses 0x34-0x37
-//if_i2c_slave if_i2c_slave (
-//  .n_rst (n_rst),
-//  .clk (sys_clk),
-//  .my_dev_address (addr),
-//  
-//  .scl_bus ({m_scl[11:4], s_scl}/*m_scl*/),
-//  .sda_bus ({m_sda[11:4], s_sda}/*m_sda*/),
-//  .sreset_bus (m_sreset),
-//  .sstat_bus (m_sstat),
-//
-//  .have_msg_bus (have_msg_bus[55:44]),
-//  .s_rdreq_bus (rdreq_bus[55:44]),
-//  .s_dout (slave_data_bus[7*8+:8]),
-//  .len (len_bus[7*8+:8])
-//);
-
-if_i2c_fake_master if_i2c_fake_master (
+if_i2c_slave if_i2c_slave (
   .n_rst (n_rst),
   .clk (sys_clk),
+  .my_dev_address (addr),
   
-  .i2c_speed (i2c_speed),
   .scl_bus (m_scl),
   .sda_bus (m_sda),
   .sreset_bus (m_sreset),
   .sstat_bus (m_sstat),
-  
-  .m_din (master_data),
-  .m_wrreq_bus (valid_bus[55:44]),
+
   .have_msg_bus (have_msg_bus[55:44]),
   .s_rdreq_bus (rdreq_bus[55:44]),
   .s_dout (slave_data_bus[7*8+:8]),
   .len (len_bus[7*8+:8])
 );
 
+//if_i2c_fake_master if_i2c_fake_master (
+//  .n_rst (n_rst),
+//  .clk (sys_clk),
+//  
+//  .i2c_speed (i2c_speed),
+//  .scl_bus (m_scl),
+//  .sda_bus (m_sda),
+//  .sreset_bus (m_sreset),
+//  .sstat_bus (m_sstat),
+//  
+//  .m_din (master_data),
+//  .m_wrreq_bus (valid_bus[55:44]),
+//  .have_msg_bus (have_msg_bus[55:44]),
+//  .s_rdreq_bus (rdreq_bus[55:44]),
+//  .s_dout (slave_data_bus[7*8+:8]),
+//  .len (len_bus[7*8+:8])
+//);
 
+// clock to debug I2C
+/*
+reg [3:0] stp_counter;
+
+always @ (posedge sclk_common or negedge n_rst)
+  if (!n_rst)
+    begin
+    stp_clk <= 0;
+    stp_counter <= 0;
+    end
+  else
+    begin
+    if (stp_counter < 4'd7)
+      stp_counter <= stp_counter + 1'b1;
+    else
+      begin
+      stp_counter <= 0;
+      stp_clk <= !stp_clk;
+      end
+    end
+*/
 
 
 // debug outputs

@@ -20,16 +20,16 @@ module i2c_master_teddy (
   
   output reg [7:0] out_data,
   output reg       out_ena,
-  output reg       rd_req,
+  output reg       rd_req
   
   // debug
-  output [3:0] my_state,
-  output [2:0] my_cnt_bit,
-  output [7:0] my_cnt_byte,
-  output       my_ack,
-  output [15:0] my_cnt_clk,
-  output       my_address_stage,
-  output       my_rep_start
+  //output [3:0] my_state,
+  //output [2:0] my_cnt_bit,
+  //output [7:0] my_cnt_byte,
+  //output       my_ack,
+  //output [15:0] my_cnt_clk,
+  //output       my_address_stage,
+  //output       my_rep_start
 );
 
 wire [15:0] CLK_DIV_MINUS_ONE = CLK_DIV - 1'b1;
@@ -233,14 +233,14 @@ always @ (posedge clk or negedge n_rst)
 
 
 
-
-assign my_state = state;
-assign my_cnt_bit = cnt_bit;
-assign my_cnt_byte = cnt_byte;
-assign my_ack = ack;
-assign my_cnt_clk = cnt_clk;
-assign my_address_stage = address_stage;
-assign my_rep_start = rep_start;
+// debug assigns
+//assign my_state = state;
+//assign my_cnt_bit = cnt_bit;
+//assign my_cnt_byte = cnt_byte;
+//assign my_ack = ack;
+//assign my_cnt_clk = cnt_clk;
+//assign my_address_stage = address_stage;
+//assign my_rep_start = rep_start;
 
 
 

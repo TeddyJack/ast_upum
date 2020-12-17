@@ -1,7 +1,7 @@
 `include "defines.v"
 
-module if_i2c_master #(
-  parameter N = 4
+module if_i2c_fake_master #(
+  parameter N = 12
 )(
   input n_rst,
   input clk,
@@ -9,8 +9,8 @@ module if_i2c_master #(
   input i2c_speed,
   inout [N-1:0] scl_bus,
   inout [N-1:0] sda_bus,
-  output [N-1:0] sreset_bus,
-  input [N-1:0] sstat_bus,
+  input [N-1:0] sreset_bus,
+  output [N-1:0] sstat_bus,
   
   input [7:0] m_din,
   input [N-1:0] m_wrreq_bus,  // *
@@ -21,8 +21,7 @@ module if_i2c_master #(
   output [7:0] len
 );
 
-//assign sreset_bus = {N{!ready}} & select_unitary;  // DON'T FORGET TO REMOVE
-assign sreset_bus = {N{1'b1}};
+assign sstat_bus = {N{!ready}} & select_unitary;  // DON'T FORGET TO REMOVE
 
 
 wire        m_empty;

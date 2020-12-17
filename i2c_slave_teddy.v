@@ -8,17 +8,17 @@ module i2c_slave_teddy (
   input scl,
   output reg [7:0] out_data,
   output out_ena,
-  output ready,
+  output ready
   // debug ports
-  output [3:0] my_state,
-  output my_sda_o,
-  output my_sda_oen,
-  output my_read
+  //output [3:0] my_state,
+  //output my_sda_o,
+  //output my_sda_oen,
+  //output my_read
 );
-assign my_state = state;
-assign my_sda_o = sda_o;
-assign my_sda_oen = sda_oen;
-assign my_read = read;
+//assign my_state = state;
+//assign my_sda_o = sda_o;
+//assign my_sda_oen = sda_oen;
+//assign my_read = read;
 
 
 
