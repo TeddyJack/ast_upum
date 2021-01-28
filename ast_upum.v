@@ -95,7 +95,7 @@ module ast_upum (
   output load_pdr_4v5_1
   // debug outputs
   //output [7:0] my_tx_data,
-  //output my_tx_valid
+  //output my_tx_valid,
   //output reg stp_clk
 );
 
@@ -369,7 +369,7 @@ if_i2c_master if_i2c_master (
 
 
 
-// addresses 0x34-0x37
+// addresses 0x2C-0x37
 if_i2c_slave if_i2c_slave (
   .n_rst (n_rst),
   .clk (sys_clk),
@@ -383,7 +383,10 @@ if_i2c_slave if_i2c_slave (
   .have_msg_bus (have_msg_bus[55:44]),
   .s_rdreq_bus (rdreq_bus[55:44]),
   .s_dout (slave_data_bus[7*8+:8]),
-  .len (len_bus[7*8+:8])
+  .len (len_bus[7*8+:8]),
+  
+  .master_data (master_data),
+  .master_ena_bus (valid_bus[55:44])
 );
 
 //if_i2c_fake_master if_i2c_fake_master (

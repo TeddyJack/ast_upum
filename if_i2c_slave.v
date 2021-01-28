@@ -13,7 +13,10 @@ module if_i2c_slave #(
   input [N-1:0] s_rdreq_bus,  // *
   output [7:0] s_dout,
   output [N-1:0] have_msg_bus,  // *
-  output [7:0] len
+  output [7:0] len,
+  
+  input [7:0] master_data,
+  input [N-1:0] master_ena_bus
 );
 
 assign sstat_bus = {N{!ready}} & select_unitary;    // DON'T FORGET TO REMOVE
@@ -78,6 +81,10 @@ fifo_sc fifo_slave (
 );
 
 
+wire [7:0] m_dout;
+wire m_rdreq;
+wire master_ena = |master_ena_bus;
+
 
 i2c_slave_teddy i2c_slave_teddy(
   .clk (clk),
@@ -89,7 +96,9 @@ i2c_slave_teddy i2c_slave_teddy(
   .scl (scl),
   .out_data (s_din),
   .out_ena (s_wrreq),
-  .ready (ready)
+  .ready (ready),
+  .master_data (m_dout),
+  .master_rdreq (m_rdreq)
 );
 
 
@@ -104,7 +113,16 @@ else
   end
 
 
-
+fifo_sc fifo_master (
+	.aclr  (!n_rst),
+	.clock (clk),
+	.data  (master_data),
+	.rdreq (m_rdreq),
+	.wrreq (master_ena),
+	.empty (),
+	.q     (m_dout),
+	.usedw ()
+);
 
 
 

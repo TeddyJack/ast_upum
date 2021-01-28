@@ -8,7 +8,9 @@ module i2c_slave_teddy (
   input scl,
   output reg [7:0] out_data,
   output out_ena,
-  output ready
+  output ready,
+  input [7:0] master_data,
+  output master_rdreq
   // debug ports
   //output [3:0] my_state,
   //output my_sda_o,
@@ -25,6 +27,7 @@ module i2c_slave_teddy (
 assign sda_oen = (state == SET_ACK) | (state == SET_DATA);
 assign out_ena = (state == SET_ACK) & rising_scl;
 assign ready = !transfer_in_progress;
+assign master_rdreq = (state == GET_ACK) & rising_scl;
 
 
 
@@ -123,7 +126,11 @@ always @ (posedge clk or negedge n_rst)
         begin
         sda_o <= 1;
         if (read)
+          begin
           state <= SET_DATA;
+          out_data <= (master_data << 1);
+          sda_o <= out_data[7];
+          end
         else
           state <= GET_DATA;
         end
@@ -152,7 +159,11 @@ always @ (posedge clk or negedge n_rst)
         if (sda_i)
           state <= IDLE;
         else
-         state <= SET_DATA;
+          begin
+          state <= SET_DATA;
+          out_data <= (master_data << 1);
+          sda_o <= out_data[7];
+          end
         end
       endcase
     end
