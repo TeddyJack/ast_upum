@@ -129,7 +129,7 @@ always @ (posedge clk or negedge n_rst)
           begin
           state <= SET_DATA;
           out_data <= (master_data << 1);
-          sda_o <= out_data[7];
+          sda_o <= master_data[7];
           end
         else
           state <= GET_DATA;
@@ -162,7 +162,7 @@ always @ (posedge clk or negedge n_rst)
           begin
           state <= SET_DATA;
           out_data <= (master_data << 1);
-          sda_o <= out_data[7];
+          sda_o <= master_data[7];
           end
         end
       endcase
